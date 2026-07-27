@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.removeWheelListener?.();
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onScroll(): void {
     // Calculate how far the user has scrolled past the top
     const scrollY = window.scrollY || document.documentElement.scrollTop;
