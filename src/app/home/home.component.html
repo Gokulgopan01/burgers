@@ -1,0 +1,92 @@
+<div class="carousel-viewport" [class.reduced-motion]="prefersReducedMotion">
+
+    <!-- ============ dot navigation ============ -->
+    <nav class="dots-nav" aria-label="Slide navigation">
+        <button *ngFor="let s of [0, 1, 2, 3]; let i = index" class="dot" type="button"
+            [class.active]="activeIndex === i" [attr.aria-current]="activeIndex === i"
+            [attr.aria-label]="'Go to slide ' + (i + 1)" (click)="goTo(i)">
+            <span class="dot__ring"></span>
+        </button>
+    </nav>
+
+    <!-- ============ brand mark ============ -->
+    <div class="brand-mark">
+        <span class="brand-mark__main">yummy</span>
+        <span class="brand-mark__sub">burgers &amp; more</span>
+    </div>
+
+    <!-- ============ sliding track (backgrounds + copy) ============ -->
+    <div class="slides-track" [style.transform]="trackTransform">
+
+        <!-- SLIDE 0 — Strawberry Bliss -->
+        <section class="slide slide--juice">
+            <div class="bg bg--juice" [class.in-view]="activeIndex === 0"></div>
+            <div class="bg-watermark">HEALTHY</div>
+
+            <div class="slide-copy slide-copy--juice" [class.in-view]="activeIndex === 0">
+                <span class="eyebrow">pressed fresh, every morning</span>
+                <h1 class="word-stamp">HEALTHY</h1>
+            </div>
+
+            <div class="info-card" [class.in-view]="activeIndex === 0">
+                <h3>Strawberry Bliss</h3>
+                <p>Made with real strawberries for a smooth and simply delightful sip.</p>
+                <span class="price">₹129</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 1 — Yummy Burgers -->
+        <section class="slide slide--burger">
+            <div class="bg bg--burger" [class.in-view]="activeIndex === 1"></div>
+            <div class="bg-watermark bg-watermark--right">STACK</div>
+
+            <div class="slide-copy slide-copy--burger" [class.in-view]="activeIndex === 1">
+                <span class="script-tag">&hellip; since 1967</span>
+                <h1 class="headline">Stacked<br />Happiness</h1>
+            </div>
+        </section>
+
+        <!-- SLIDE 2 — Crispy Fries (extend with your own asset the same way) -->
+        <section class="slide slide--fries">
+            <div class="bg bg--fries" [class.in-view]="activeIndex === 2"></div>
+            <div class="bg-watermark">CRISPY</div>
+
+            <div class="slide-copy slide-copy--fries" [class.in-view]="activeIndex === 2">
+                <span class="eyebrow">golden, salted, twice-fried</span>
+                <h1 class="headline">Crunch<br />That Counts</h1>
+            </div>
+        </section>
+
+        <!-- SLIDE 3 — Sweet Finish -->
+        <section class="slide slide--dessert">
+            <div class="bg bg--dessert" [class.in-view]="activeIndex === 3"></div>
+            <div class="bg-watermark">SWEET</div>
+
+            <div class="slide-copy slide-copy--dessert" [class.in-view]="activeIndex === 3">
+                <span class="eyebrow">the last bite, always earned</span>
+                <h1 class="headline">Sweet<br />Finish</h1>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ============ travelling food photos ============ -->
+
+    <img class="food-photo food-photo--juice" [ngClass]="juiceState" src="assets/home/strawberry_juice.png"
+        alt="Chilled strawberry juice" />
+
+    <img class="food-photo food-photo--burger" [ngClass]="burgerState" src="assets/home/burger.png"
+        alt="Stacked cheeseburger" />
+
+    <!-- Placeholder travelling elements for slides 2 & 3.
+       Swap the div for an <img src="assets/home/..."> once you have photos. -->
+    <div class="food-photo food-photo--fries" [ngClass]="friesState">🍟</div>
+    <div class="food-photo food-photo--dessert" [ngClass]="dessertState">🍰</div>
+
+    <!-- ============ scroll hint ============ -->
+    <div class="scroll-hint" [class.hide]="activeIndex === totalSlides - 1">
+        <span class="scroll-hint__mouse"><span class="scroll-hint__wheel"></span></span>
+        <span class="scroll-hint__label">scroll</span>
+    </div>
+
+</div>
