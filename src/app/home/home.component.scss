@@ -85,13 +85,15 @@
 
 .bg--juice {
     background-image:
-        linear-gradient(180deg, rgba(201, 42, 99, 0.35) 0%, rgba(153, 20, 66, 0.55) 100%);
+        linear-gradient(180deg, rgba(201, 42, 99, 0.35) 0%, rgba(153, 20, 66, 0.55) 100%),
+        url("/assets/home/strawberry_juice_background.png");
     background-color: var(--pink-deep);
 }
 
 .bg--burger {
     background-image:
-        linear-gradient(180deg, rgba(184, 31, 43, 0.25) 0%, rgba(120, 16, 22, 0.55) 100%);
+        linear-gradient(180deg, rgba(184, 31, 43, 0.25) 0%, rgba(120, 16, 22, 0.55) 100%),
+        url("/assets/home/burger_background.png");
     background-color: var(--red-deep);
 }
 
@@ -99,12 +101,14 @@
 // way bg--juice / bg--burger are wired up above.
 .bg--fries {
     background-color: var(--fries-deep);
-    background-image: radial-gradient(circle at 30% 20%, var(--fries-glow), var(--fries-deep) 70%);
+    background-image: radial-gradient(circle at 30% 20%, rgba(242, 166, 61, 0.4), rgba(201, 106, 31, 0.65) 70%),
+        url('/assets/home/french_fries_background.png');
 }
 
 .bg--dessert {
     background-color: var(--dessert-deep);
-    background-image: radial-gradient(circle at 70% 25%, var(--dessert-glow), var(--dessert-deep) 70%);
+    background-image: radial-gradient(circle at 70% 25%, rgba(155, 107, 214, 0.4), rgba(91, 58, 160, 0.65) 70%),
+        url("/assets/home/strawberry_dessert_background.png");
 }
 
 // Faint oversized watermark word behind the copy, echoing the reference design
@@ -203,9 +207,9 @@
 .slide-copy--fries,
 .slide-copy--dessert {
     position: absolute;
-    bottom: 14%;
+    top: 10%;
     left: 50%;
-    transform: translate(-50%, 20px);
+    transform: translate(-50%, 0);
 
     &.in-view {
         transform: translate(-50%, 0);
@@ -282,12 +286,6 @@
 
 // Emoji placeholders for the un-photographed slides — sized/positioned the
 // same way so swapping them for <img> tags later is a drop-in change.
-.food-photo--fries,
-.food-photo--dessert {
-    font-size: min(14vw, 160px);
-    line-height: 1;
-    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.4));
-}
 
 // Shared travel states -------------------------------------------------------
 .enter-below {
@@ -729,4 +727,303 @@
     .slides-track {
         height: 400vh;
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*=====================================================
+                WRAPS BENEFITS
+======================================================*/
+
+.wrap-benefits {
+
+    display: flex;
+    min-height: 100vh;
+
+    overflow: hidden;
+
+}
+
+/* LEFT */
+
+.wrap-benefits__left {
+
+    width: 55%;
+
+    background: #2f1506;
+
+    color: white;
+
+    padding: 90px 80px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+}
+
+.section-tag {
+
+    color: #ffb540;
+
+    text-transform: uppercase;
+
+    letter-spacing: 3px;
+
+    font-weight: 600;
+
+    margin-bottom: 20px;
+
+}
+
+.wrap-benefits h2 {
+
+    font-size: 5rem;
+
+    line-height: .9;
+
+    font-weight: 900;
+
+    color: #ffb540;
+
+    margin-bottom: 40px;
+
+}
+
+.divider {
+
+    width: 100%;
+
+    height: 3px;
+
+    background:
+
+        repeating-linear-gradient(to right,
+            #ffb540 0 6px,
+            transparent 6px 16px);
+
+    margin-bottom: 35px;
+
+}
+
+.intro {
+
+    width: 75%;
+
+    color: #ffe6b5;
+
+    line-height: 1.8;
+
+    margin-bottom: 60px;
+
+}
+
+/* BENEFITS */
+
+.benefits {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 35px;
+
+}
+
+.benefit {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 18px;
+
+}
+
+.icon {
+
+    width: 65px;
+
+    height: 65px;
+
+    border-radius: 50%;
+
+    border: 2px solid #ffb540;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 28px;
+
+    flex-shrink: 0;
+
+}
+
+.benefit h4 {
+
+    margin-bottom: 8px;
+
+    color: #ffb540;
+
+    font-size: 20px;
+
+}
+
+.benefit p {
+
+    color: #f7d9a3;
+
+    line-height: 1.7;
+
+}
+
+/* RIGHT */
+
+.wrap-benefits__right {
+
+    width: 45%;
+
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    background: linear-gradient(135deg,
+            #5b3aa0 0%,
+            #9b6bd6 100%);
+
+}
+
+/* Decorative blobs */
+
+.wrap-benefits__right::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 650px;
+
+    height: 650px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, .08);
+
+    top: -180px;
+
+    right: -180px;
+
+}
+
+.wrap-benefits__right::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 450px;
+
+    height: 450px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, .05);
+
+    bottom: -150px;
+
+    left: -100px;
+
+}
+
+.wrap-benefits__right img {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 90%;
+
+    max-width: 650px;
+
+    filter: drop-shadow(0 40px 40px rgba(0, 0, 0, .35));
+
+    transition: .4s;
+
+}
+
+.wrap-benefits__right img:hover {
+
+    transform: scale(1.05);
+
+}
+
+/*==========================
+        MOBILE
+==========================*/
+
+@media(max-width:991px) {
+
+    .wrap-benefits {
+
+        flex-direction: column;
+
+    }
+
+    .wrap-benefits__left,
+    .wrap-benefits__right {
+
+        width: 100%;
+
+    }
+
+    .wrap-benefits__left {
+
+        padding: 60px 30px;
+
+    }
+
+    .wrap-benefits h2 {
+
+        font-size: 3.3rem;
+
+    }
+
+    .intro {
+
+        width: 100%;
+
+    }
+
+    .benefits {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .wrap-benefits__right {
+
+        min-height: 450px;
+
+    }
+
 }
