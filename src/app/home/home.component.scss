@@ -284,6 +284,17 @@
     object-fit: contain;
 }
 
+// Align the dessert photo so it starts in the center of the carousel (50%),
+// and seamlessly glides to the right panel (77.5%) as the user scrolls down!
+.food-photo--dessert {
+    // 50% base + up to 27.5% shift based on scroll progress
+    left: calc(50% + (27.5% * var(--scroll-progress, 0)));
+
+    @media (max-width: 991px) {
+        left: 50%;
+    }
+}
+
 // Emoji placeholders for the un-photographed slides — sized/positioned the
 // same way so swapping them for <img> tags later is a drop-in change.
 

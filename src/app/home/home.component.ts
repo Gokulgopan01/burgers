@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private removeWheelListener?: () => void;
 
-  constructor(private host: ElementRef<HTMLElement>, private renderer: Renderer2) {}
+  constructor(private host: ElementRef<HTMLElement>, private renderer: Renderer2) { }
 
   ngOnInit(): void {
     this.prefersReducedMotion =
@@ -60,6 +60,21 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.removeWheelListener?.();
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll(): void {
+    // Calculate how far the user has scrolled past the top
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+
+    // We only care about the first 100vh of scrolling (scrolling into the wrap section)
+    let progress = scrollY / windowHeight;
+    if (progress > 1) progress = 1;
+    if (progress < 0) progress = 0;
+
+    // Set a CSS variable that we can use to drive animations based on scroll!
+    this.renderer.setStyle(this.host.nativeElement, '--scroll-progress', progress.toString());
   }
 
   /** CSS transform applied to the sliding track */
