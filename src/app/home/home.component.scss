@@ -85,15 +85,13 @@
 
 .bg--juice {
     background-image:
-        linear-gradient(180deg, rgba(201, 42, 99, 0.35) 0%, rgba(153, 20, 66, 0.55) 100%),
-        url('/assests/home/strawbery_juice_background.png');
+        linear-gradient(180deg, rgba(201, 42, 99, 0.35) 0%, rgba(153, 20, 66, 0.55) 100%);
     background-color: var(--pink-deep);
 }
 
 .bg--burger {
     background-image:
-        linear-gradient(180deg, rgba(184, 31, 43, 0.25) 0%, rgba(120, 16, 22, 0.55) 100%),
-        url('/assests/home/burger_background.png');
+        linear-gradient(180deg, rgba(184, 31, 43, 0.25) 0%, rgba(120, 16, 22, 0.55) 100%);
     background-color: var(--red-deep);
 }
 
@@ -274,8 +272,12 @@
 }
 
 .food-photo--juice,
-.food-photo--burger {
-    width: min(30vw, 380px);
+.food-photo--burger,
+.food-photo--fries,
+.food-photo--dessert {
+    width: min(80vw, 900px);
+    max-height: 80vh;
+    object-fit: contain;
 }
 
 // Emoji placeholders for the un-photographed slides — sized/positioned the
@@ -585,16 +587,14 @@
         width: 92vw;
     }
 
-    // Travelling photos: fixed clamp so they scale gracefully across
-    // 360px → 450px without ever crowding the text above/below them
+    // Travelling photos: allow them to be much larger on mobile
     .food-photo--juice,
-    .food-photo--burger {
-        width: clamp(190px, 62vw, 260px);
-    }
-
+    .food-photo--burger,
     .food-photo--fries,
     .food-photo--dessert {
-        font-size: clamp(5rem, 30vw, 8rem);
+        width: 100vw;
+        height: 75vh;
+        max-height: none;
     }
 
     // Info card sits centred near the bottom, above the dot row, full-bleed-ish
@@ -657,11 +657,6 @@
         font-size: clamp(2.6rem, 24vw, 4.8rem);
     }
 
-    .food-photo--juice,
-    .food-photo--burger {
-        width: clamp(170px, 60vw, 220px);
-    }
-
     .info-card {
         width: 92vw;
         padding: 0.8rem 0.9rem;
@@ -706,11 +701,6 @@
     .eyebrow,
     .script-tag {
         font-size: 0.85rem;
-    }
-
-    .food-photo--juice,
-    .food-photo--burger {
-        width: clamp(140px, 32vh, 200px);
     }
 
     .info-card {
