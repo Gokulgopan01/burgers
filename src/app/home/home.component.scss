@@ -1173,8 +1173,7 @@
 
 // =====================================================================
 // SIGNATURE MENU — "Made To Be Remembered"
-// Continues the warm-espresso / burnt-orange / violet-glow palette
-// established in the hero + "Why Our Rolls & Wraps" sections.
+// Redesigned for a premium, fresh, editorial, food-focused look.
 // =====================================================================
 
 :host {
@@ -1182,381 +1181,302 @@
 }
 
 .signatures {
-    // ---- local design tokens (scoped to this section only) ----
-    --sig-bg-base: #1c0e07;
-    --sig-bg-raise: #2a1608;
-    --sig-orange: #f2a33e;
-    --sig-orange-deep: #e8720f;
-    --sig-violet: #7c4dbd;
-    --sig-cream: #fbf1e2;
-    --sig-cream-dim: rgba(251, 241, 226, 0.66);
-    --sig-line: rgba(251, 241, 226, 0.12);
-    --section-progress: 0;
-
+    --sig-bg: #fffcf8;
+    --sig-text: #2c2520;
+    --sig-text-light: #6a5e55;
+    --sig-accent: #e86c1d;
+    --sig-surface: #f6efe6;
+    --sig-line: rgba(44, 37, 32, 0.1);
+    
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    padding: clamp(80px, 12vw, 160px) 0 clamp(64px, 8vw, 120px);
-    background:
-        radial-gradient(120% 90% at 15% 0%, rgba(124, 77, 189, 0.16), transparent 55%),
-        linear-gradient(165deg, var(--sig-bg-raise) 0%, var(--sig-bg-base) 55%, #130800 100%);
-    color: var(--sig-cream);
+    padding: clamp(70px, 10vw, 110px) 0 clamp(64px, 8vw, 100px);
+    background-color: var(--sig-bg);
+    color: var(--sig-text);
     font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-// ---------------------------------------------------------------
-// Ambient glows
-// ---------------------------------------------------------------
-.signatures__glow {
+.signatures__bg {
     position: absolute;
-    border-radius: 50%;
+    inset: 0;
     pointer-events: none;
-    filter: blur(90px);
-    opacity: 0.35;
     z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+    opacity: 0.8;
 }
 
-.signatures__glow--orange {
-    width: 480px;
-    height: 480px;
-    top: -160px;
-    left: -140px;
-    background: radial-gradient(circle, var(--sig-orange-deep), transparent 70%);
-}
-
-.signatures__glow--violet {
-    width: 560px;
-    height: 560px;
-    bottom: -220px;
-    right: -180px;
-    background: radial-gradient(circle, var(--sig-violet), transparent 70%);
-    opacity: 0.28;
-}
-
-// ---------------------------------------------------------------
-// Oversized watermark
-// ---------------------------------------------------------------
 .signatures__watermark {
     position: absolute;
-    bottom: -6%;
-    right: -2%;
+    top: 50%;
+    left: -5%;
+    transform: translateY(-50%);
     z-index: 0;
-    font-weight: 800;
-    font-size: clamp(6rem, 17vw, 15rem);
+    font-family: var(--font-display);
+    font-size: clamp(8rem, 22vw, 25rem);
     letter-spacing: 0.02em;
     line-height: 1;
-    color: rgba(242, 163, 62, 0.05);
+    color: rgba(44, 37, 32, 0.025);
     white-space: nowrap;
     pointer-events: none;
     user-select: none;
 }
 
-// ---------------------------------------------------------------
-// Inner wrapper
-// ---------------------------------------------------------------
 .signatures__inner {
     position: relative;
     z-index: 1;
-    max-width: 1320px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 clamp(24px, 5vw, 64px);
+    padding: 0 clamp(20px, 5vw, 60px);
 }
 
 // ---------------------------------------------------------------
-// Header
+// Split Hero Header
 // ---------------------------------------------------------------
-.signatures__header {
-    max-width: 620px;
-    margin-bottom: clamp(48px, 7vw, 88px);
+.signatures__hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: clamp(60px, 8vw, 100px);
+}
 
+.signatures__header {
+    flex: 0 1 500px;
     >* {
         opacity: 0;
-        transform: translateY(22px);
-        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-            transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translateY(20px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
 }
 
-.is-visible .signatures__header>* {
+.is-visible .signatures__header > * {
     opacity: 1;
     transform: translateY(0);
 }
 
 .signatures__index {
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.18em;
-    color: rgba(251, 241, 226, 0.45);
-    margin: 0 0 18px;
+    color: var(--sig-text-light);
+    margin: 0 0 16px;
     transition-delay: 0.02s;
 }
 
 .signatures__eyebrow {
     font-size: 0.8rem;
-    font-weight: 700;
+    font-weight: 800;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--sig-orange);
-    margin: 0 0 14px;
+    color: var(--sig-accent);
+    margin: 0 0 12px;
     transition-delay: 0.12s;
 }
 
 .signatures__heading {
-    font-size: clamp(2.5rem, 5vw, 4.25rem);
+    font-size: clamp(2.8rem, 5.5vw, 4.5rem);
     font-weight: 800;
-    line-height: 1.04;
-    letter-spacing: -0.01em;
-    margin: 0 0 18px;
-    color: var(--sig-cream);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 20px;
+    color: var(--sig-text);
     transition-delay: 0.22s;
 }
 
 .signatures__subtext {
     font-size: clamp(1rem, 1.2vw, 1.15rem);
     line-height: 1.6;
-    color: var(--sig-cream-dim);
-    max-width: 440px;
+    color: var(--sig-text-light);
     margin: 0;
     transition-delay: 0.34s;
 }
 
-// ---------------------------------------------------------------
-// Grid — desktop cinematic layout
-// featured card explicitly fills column 1 across all 3 rows;
-// the 3 supporting cards auto-place into column 2, one per row.
-// ---------------------------------------------------------------
-.signatures__grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    grid-template-rows: repeat(3, minmax(180px, 1fr));
-    gap: clamp(18px, 2vw, 28px);
-}
-
-// ---------------------------------------------------------------
-// Dish card — shared styles (supporting-card layout by default)
-// ---------------------------------------------------------------
-.dish-card {
+.signatures__hero-image-wrapper {
+    flex: 0 1 700px;
     position: relative;
-    display: flex;
-    flex-direction: row;
-    min-height: 200px;
-    border-radius: 22px;
+    border-radius: 20px;
     overflow: hidden;
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
-    border: 1px solid var(--sig-line);
-    box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
-
+    box-shadow: 0 30px 60px -20px rgba(44, 37, 32, 0.15);
     opacity: 0;
-    transform: translateY(36px) rotate(0.6deg);
-    transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 0.35s ease,
-        border-color 0.35s ease;
-    transition-delay: calc(var(--i, 0) * 130ms + 220ms);
-
-    &:hover {
-        border-color: rgba(242, 163, 62, 0.4);
-        box-shadow: 0 24px 50px -18px rgba(0, 0, 0, 0.7);
-    }
-}
-
-.is-visible .dish-card {
-    opacity: 1;
-    transform: translateY(0) rotate(0deg);
-}
-
-// Featured card — full-column, stronger entrance, larger everything
-.dish-card--featured {
-    grid-column: 1;
-    grid-row: 1 / span 3;
-    flex-direction: column;
-    min-height: 100%;
-    border-radius: 28px;
-    transform: translateY(56px) scale(0.97);
-    transition-duration: 1.05s;
-    transition-delay: 60ms;
-}
-
-.is-visible .dish-card--featured {
-    transform: translateY(0) scale(1);
-}
-
-// ---------------------------------------------------------------
-// Media
-// ---------------------------------------------------------------
-.dish-card__media {
-    position: relative;
-    overflow: hidden;
-    flex: 0 0 42%;
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+    transform: scale(0.94) translateY(20px);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+    
+    // Maintain aspect ratio trick
+    &::after {
+        content: '';
         display: block;
-        transform: scale(1.08) translateY(calc(var(--section-progress, 0) * -14px));
-        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        padding-bottom: 58%;
     }
 }
 
-.dish-card:hover .dish-card__media img {
-    transform: scale(1.16) translateY(calc(var(--section-progress, 0) * -14px));
+.is-visible .signatures__hero-image-wrapper {
+    opacity: 1;
+    transform: scale(1) translateY(0);
 }
 
-.dish-card--featured .dish-card__media {
-    flex-basis: 62%;
-}
-
-.dish-card__sheen {
+.signatures__hero-image {
     position: absolute;
-    inset: auto 0 0 0;
-    height: 45%;
-    background: linear-gradient(to top, rgba(15, 7, 3, 0.65), transparent);
-    pointer-events: none;
-}
-
-.dish-card__category {
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--sig-cream);
-    background: rgba(15, 7, 3, 0.5);
-    border: 1px solid rgba(251, 241, 226, 0.18);
-    backdrop-filter: blur(6px);
+    top: -10%;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    object-fit: cover;
+    transform: translateY(calc(var(--section-progress, 0) * 12%));
+    transition: transform 0.1s linear;
 }
 
 // ---------------------------------------------------------------
-// Body
+// Horizontal Editorial Showcase
 // ---------------------------------------------------------------
-.dish-card__body {
-    position: relative;
+.signatures__showcase {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.food-card {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    flex: 1;
-    padding: 16px 18px;
-    gap: 8px;
-    min-width: 0;
-
+    position: relative;
+    
     opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-    transition-delay: calc(var(--i, 0) * 130ms + 420ms);
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--i, 0) * 150ms + 400ms);
 }
 
-.is-visible .dish-card__body {
+.is-visible .food-card {
     opacity: 1;
     transform: translateY(0);
 }
 
-.dish-card--featured .dish-card__body {
-    padding: 26px 28px 28px;
-    gap: 12px;
+.food-card__media {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: -30px; // Pulls the body up for overlap effect
+    z-index: 1;
+    box-shadow: 0 15px 35px -10px rgba(44, 37, 32, 0.1);
+    background: var(--sig-surface);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    
+    &::after {
+        content: '';
+        display: block;
+        padding-bottom: 110%; // Tall portrait ratio
+    }
+
+    img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 }
 
-.dish-card__top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
+.food-card:hover .food-card__media {
+    transform: translateY(-8px);
+    img {
+        transform: scale(1.06);
+    }
 }
 
-.dish-card__name {
-    margin: 0;
+.food-card__category {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.65rem;
     font-weight: 700;
-    line-height: 1.2;
-    color: var(--sig-cream);
-    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sig-text);
 }
 
-.dish-card--featured .dish-card__name {
-    font-size: clamp(1.5rem, 2vw, 2rem);
+.food-card__body {
+    position: relative;
+    z-index: 2;
+    background: #ffffff;
+    margin: 0 16px;
+    padding: 24px 20px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px -10px rgba(44, 37, 32, 0.08);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    border: 1px solid rgba(44, 37, 32, 0.03);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.dish-card__rating {
-    flex: 0 0 auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--sig-orange);
-    white-space: nowrap;
+.food-card:hover .food-card__body {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px -15px rgba(44, 37, 32, 0.12);
 }
 
-.dish-card__star {
-    font-size: 0.85rem;
+.food-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
 }
 
-.dish-card__desc {
+.food-card__name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.3;
     margin: 0;
-    font-size: 0.82rem;
+    color: var(--sig-text);
+}
+
+.food-card__price {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--sig-accent);
+}
+
+.food-card__desc {
+    font-size: 0.85rem;
     line-height: 1.5;
-    color: var(--sig-cream-dim);
+    color: var(--sig-text-light);
+    margin: 0 0 16px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-.dish-card--featured .dish-card__desc {
-    font-size: 0.95rem;
-    -webkit-line-clamp: 3;
-}
-
-.dish-card__bottom {
+.food-card__bottom {
     margin-top: auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding-top: 6px;
 }
 
-.dish-card__price {
-    font-weight: 800;
-    font-size: 1.05rem;
-    color: var(--sig-orange);
-}
-
-.dish-card--featured .dish-card__price {
-    font-size: 1.4rem;
-}
-
-.dish-card__cta {
+.food-card__cta {
     appearance: none;
+    width: 100%;
     cursor: pointer;
-    padding: 9px 16px;
-    border-radius: 999px;
-    font-size: 0.72rem;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--sig-orange);
+    color: var(--sig-text);
     background: transparent;
-    border: 1px solid rgba(242, 163, 62, 0.55);
-    transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    border: 1px solid var(--sig-line);
+    transition: all 0.3s ease;
 
     &:hover {
-        background: var(--sig-orange);
-        color: #1c0e07;
-        transform: translateY(-1px);
+        background: var(--sig-accent);
+        border-color: var(--sig-accent);
+        color: #ffffff;
     }
-
-    &:active {
-        transform: translateY(0);
-    }
-}
-
-.dish-card--featured .dish-card__cta {
-    padding: 11px 22px;
-    font-size: 0.78rem;
 }
 
 // ---------------------------------------------------------------
@@ -1565,7 +1485,7 @@
 .signatures__footer {
     display: flex;
     justify-content: flex-end;
-    margin-top: clamp(36px, 5vw, 56px);
+    margin-top: clamp(20px, 4vw, 40px);
 }
 
 .signatures__view-all {
@@ -1576,10 +1496,10 @@
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--sig-cream);
+    color: var(--sig-text);
     text-decoration: none;
     padding-bottom: 4px;
-    border-bottom: 1px solid rgba(251, 241, 226, 0.3);
+    border-bottom: 1px solid var(--sig-line);
     transition: color 0.3s ease, border-color 0.3s ease;
 
     span {
@@ -1587,12 +1507,9 @@
     }
 
     &:hover {
-        color: var(--sig-orange);
-        border-color: var(--sig-orange);
-
-        span {
-            transform: translateX(4px);
-        }
+        color: var(--sig-accent);
+        border-color: var(--sig-accent);
+        span { transform: translateX(5px); }
     }
 }
 
@@ -1600,106 +1517,93 @@
 // RESPONSIVE
 // =====================================================================
 
-// ---- Tablet: naturally smaller cards, still 2-column cinematic feel ----
 @media (max-width: 1024px) {
-    .signatures__grid {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto;
-    }
-
-    .dish-card--featured {
-        grid-column: 1 / -1;
-        grid-row: auto;
-        flex-direction: row;
-        min-height: 300px;
-    }
-
-    .dish-card--featured .dish-card__media {
-        flex-basis: 46%;
-    }
-
-    .dish-card {
-        min-height: 230px;
-    }
-}
-
-// ---- Small tablet / large phone: stack into a single column ----
-@media (max-width: 760px) {
-    .signatures__grid {
-        grid-template-columns: 1fr;
-    }
-
-    .dish-card--featured {
+    .signatures__hero {
         flex-direction: column;
-        min-height: 420px;
+        align-items: stretch;
     }
-
-    .dish-card--featured .dish-card__media {
-        flex-basis: 58%;
+    
+    .signatures__header {
+        flex: auto;
+    }
+    
+    .signatures__hero-image-wrapper {
+        flex: auto;
+        &::after { padding-bottom: 45%; }
+    }
+    
+    .signatures__showcase {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+    
+    .food-card__media::after {
+        padding-bottom: 75%; // shorter on tablet
     }
 }
 
-// ---- Mobile: horizontal swipe carousel ----
 @media (max-width: 640px) {
     .signatures {
-        padding-top: 72px;
-        padding-bottom: 56px;
+        padding-top: 60px; // No huge empty opening space
+        padding-bottom: 60px;
     }
-
-    .signatures__header {
-        margin-bottom: 36px;
+    
+    .signatures__hero {
+        margin-bottom: 40px;
+        gap: 24px;
     }
-
-    .signatures__grid {
+    
+    .signatures__hero-image-wrapper::after {
+        padding-bottom: 55%;
+    }
+    
+    .signatures__heading {
+        font-size: 2.3rem;
+    }
+    
+    // Swipe Carousel for food cards
+    .signatures__showcase {
         display: flex;
         grid-template-columns: none;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         gap: 16px;
-        padding: 4px 24px 12px;
-        margin: 0 -24px;
-
-        // hide scrollbar, keep it functional
+        padding: 4px 20px 24px;
+        margin: 0 -20px;
         scrollbar-width: none;
-
-        &::-webkit-scrollbar {
-            display: none;
-        }
+        &::-webkit-scrollbar { display: none; }
     }
-
-    .dish-card,
-    .dish-card--featured {
-        flex: 0 0 84%;
+    
+    .food-card {
+        flex: 0 0 82%; // Show 1 card + ~18% of next
         scroll-snap-align: center;
-        flex-direction: column;
-        min-height: 0;
     }
-
-    .dish-card__media {
-        flex-basis: 55%;
+    
+    .food-card__media::after {
+        padding-bottom: 90%;
     }
-
+    
     .signatures__footer {
         justify-content: flex-start;
-        padding: 0 24px;
     }
 }
 
 // ---------------------------------------------------------------
-// Reduced motion — show everything in its resting state, no transitions
+// Reduced motion
 // ---------------------------------------------------------------
 .reduced-motion {
-
-    .signatures__header>*,
-    .dish-card,
-    .dish-card__body {
+    .signatures__header > *,
+    .signatures__hero-image-wrapper,
+    .food-card {
         transition: none !important;
         opacity: 1 !important;
         transform: none !important;
     }
-
-    .dish-card__media img {
+    
+    .signatures__hero-image, .food-card__media img {
         transition: none !important;
+        transform: none !important;
     }
 }
