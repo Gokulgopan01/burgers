@@ -151,9 +151,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // If at the last slide and trying to scroll down, allow native page scroll
+    // If at the last slide and trying to scroll down
     if (this.activeIndex === this.totalSlides - 1 && event.deltaY > 0) {
-      return;
+      // If we are currently animating into the last slide, prevent native scroll
+      // so we don't accidentally skip past it in one scroll motion.
+      if (this.isAnimating) {
+        event.preventDefault();
+        return;
+      }
+      return; // allow native page scroll
     }
 
     // Otherwise, we are inside the carousel navigating between slides
@@ -188,7 +194,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.activeIndex === 0 && deltaY < 0) return;
 
     // Allow native scroll down at the last slide
-    if (this.activeIndex === this.totalSlides - 1 && deltaY > 0) return;
+    if (this.activeIndex === this.totalSlides - 1 && deltaY > 0) {
+      if (this.isAnimating) {
+        event.preventDefault();
+        return;
+      }
+      return;
+    }
 
     // Prevent native scroll while navigating inside the carousel
     event.preventDefault();

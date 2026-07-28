@@ -92,7 +92,7 @@
 
 .bg--burger {
     background-image:
-        linear-gradient(180deg, rgba(184, 31, 43, 0.25) 0%, rgba(120, 16, 22, 0.55) 100%),
+        // linear-gradient(180deg, rgba(184, 31, 43, 0.25) 0%, rgba(120, 16, 22, 0.55) 100%),
         url("/assets/home/burger_background.png");
     background-color: var(--red-deep);
 }
@@ -101,14 +101,50 @@
 // way bg--juice / bg--burger are wired up above.
 .bg--fries {
     background-color: var(--fries-deep);
-    background-image: radial-gradient(circle at 30% 20%, rgba(242, 166, 61, 0.4), rgba(201, 106, 31, 0.65) 70%),
-        url('/assets/home/french_fries_background.png');
+    background-image:
+        // radial-gradient(circle at 30% 20%, rgba(242, 166, 61, 0.4), rgba(201, 106, 31, 0.65) 70%),
+        url('/assets/home/pasta_background.png');
 }
 
 .bg--dessert {
     background-color: var(--dessert-deep);
-    background-image: radial-gradient(circle at 70% 25%, rgba(155, 107, 214, 0.4), rgba(91, 58, 160, 0.65) 70%),
-        url("/assets/home/strawberry_dessert_background.png");
+    background-image:
+        //  radial-gradient(circle at 70% 25%, rgba(155, 107, 214, 0.4), rgba(91, 58, 160, 0.65) 70%),
+        url("/assets/home/momos_background.png");
+}
+
+@media (max-width: 768px) {
+
+    // CSS Trick: Bring the background ingredients (which are on the far edges) 
+    // into view on narrow screens by cloning the left and right edges of the 
+    // background image and smoothly fading them into the center.
+    .bg::before,
+    .bg::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 40%;
+        background-image: inherit;
+        background-size: cover;
+        background-color: inherit;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .bg::before {
+        left: 0;
+        background-position: left center;
+        -webkit-mask-image: linear-gradient(to right, black 30%, transparent 100%);
+        mask-image: linear-gradient(to right, black 30%, transparent 100%);
+    }
+
+    .bg::after {
+        right: 0;
+        background-position: right center;
+        -webkit-mask-image: linear-gradient(to left, black 30%, transparent 100%);
+        mask-image: linear-gradient(to left, black 30%, transparent 100%);
+    }
 }
 
 // Faint oversized watermark word behind the copy, echoing the reference design
@@ -265,7 +301,7 @@
 // ---------------------------------------------------------------------------
 .food-photo {
     position: absolute;
-    top: 50%;
+    top: 60%;
     left: 50%;
     z-index: 5;
     pointer-events: none;
@@ -816,10 +852,12 @@
             transform: rotate(6deg);
             margin-top: -15px;
         }
+
         &--red {
             transform: rotate(-4deg);
             margin-top: 15px;
         }
+
         &__track span {
             font-size: 1.2rem;
         }
