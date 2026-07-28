@@ -212,7 +212,10 @@ export class HomeComponent
 
   /** CSS transform applied to the sliding track */
   get trackTransform(): string {
-    return `translate3d(0, -${this.activeIndex * 100}vh, 0)`;
+    // Use % instead of vh so it works perfectly on mobile browsers
+    // where the address bar changes the actual viewport height dynamically.
+    // The track holds all slides, so each slide is exactly (100 / totalSlides)% of the track's total height.
+    return `translate3d(0, -${(this.activeIndex * 100) / this.totalSlides}%, 0)`;
   }
 
   // ---------------------------------------------------------------------

@@ -1187,7 +1187,7 @@
     --sig-accent: #e86c1d;
     --sig-surface: #f6efe6;
     --sig-line: rgba(44, 37, 32, 0.1);
-    
+
     position: relative;
     overflow: hidden;
     isolation: isolate;
@@ -1243,6 +1243,7 @@
 
 .signatures__header {
     flex: 0 1 500px;
+
     >* {
         opacity: 0;
         transform: translateY(20px);
@@ -1250,7 +1251,7 @@
     }
 }
 
-.is-visible .signatures__header > * {
+.is-visible .signatures__header>* {
     opacity: 1;
     transform: translateY(0);
 }
@@ -1301,7 +1302,7 @@
     opacity: 0;
     transform: scale(0.94) translateY(20px);
     transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
-    
+
     // Maintain aspect ratio trick
     &::after {
         content: '';
@@ -1340,7 +1341,7 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    
+
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1361,7 +1362,7 @@
     box-shadow: 0 15px 35px -10px rgba(44, 37, 32, 0.1);
     background: var(--sig-surface);
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    
+
     &::after {
         content: '';
         display: block;
@@ -1380,6 +1381,7 @@
 
 .food-card:hover .food-card__media {
     transform: translateY(-8px);
+
     img {
         transform: scale(1.06);
     }
@@ -1509,7 +1511,10 @@
     &:hover {
         color: var(--sig-accent);
         border-color: var(--sig-accent);
-        span { transform: translateX(5px); }
+
+        span {
+            transform: translateX(5px);
+        }
     }
 }
 
@@ -1522,22 +1527,25 @@
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .signatures__header {
         flex: auto;
     }
-    
+
     .signatures__hero-image-wrapper {
         flex: auto;
-        &::after { padding-bottom: 45%; }
+
+        &::after {
+            padding-bottom: 45%;
+        }
     }
-    
+
     .signatures__showcase {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 24px;
     }
-    
+
     .food-card__media::after {
         padding-bottom: 75%; // shorter on tablet
     }
@@ -1548,20 +1556,20 @@
         padding-top: 60px; // No huge empty opening space
         padding-bottom: 60px;
     }
-    
+
     .signatures__hero {
         margin-bottom: 40px;
         gap: 24px;
     }
-    
+
     .signatures__hero-image-wrapper::after {
         padding-bottom: 55%;
     }
-    
+
     .signatures__heading {
         font-size: 2.3rem;
     }
-    
+
     // Swipe Carousel for food cards
     .signatures__showcase {
         display: flex;
@@ -1573,18 +1581,21 @@
         padding: 4px 20px 24px;
         margin: 0 -20px;
         scrollbar-width: none;
-        &::-webkit-scrollbar { display: none; }
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
-    
+
     .food-card {
         flex: 0 0 82%; // Show 1 card + ~18% of next
         scroll-snap-align: center;
     }
-    
+
     .food-card__media::after {
         padding-bottom: 90%;
     }
-    
+
     .signatures__footer {
         justify-content: flex-start;
     }
@@ -1594,15 +1605,17 @@
 // Reduced motion
 // ---------------------------------------------------------------
 .reduced-motion {
-    .signatures__header > *,
+
+    .signatures__header>*,
     .signatures__hero-image-wrapper,
     .food-card {
         transition: none !important;
         opacity: 1 !important;
         transform: none !important;
     }
-    
-    .signatures__hero-image, .food-card__media img {
+
+    .signatures__hero-image,
+    .food-card__media img {
         transition: none !important;
         transform: none !important;
     }
