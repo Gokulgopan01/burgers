@@ -209,3 +209,61 @@
     </div>
 
 </section>
+
+
+
+<section class="signatures" #sectionRoot [class.is-visible]="isVisible" [class.reduced-motion]="prefersReducedMotion"
+    aria-labelledby="signatures-heading">
+    <span class="signatures__watermark" aria-hidden="true">SIGNATURES</span>
+
+    <div class="signatures__glow signatures__glow--orange" aria-hidden="true"></div>
+    <div class="signatures__glow signatures__glow--violet" aria-hidden="true"></div>
+
+    <div class="signatures__inner">
+
+        <header class="signatures__header">
+            <p class="signatures__index">01 / SIGNATURE MENU</p>
+            <p class="signatures__eyebrow">The Ones Worth Craving</p>
+            <h2 class="signatures__heading" id="signatures-heading">Made To Be Remembered</h2>
+            <p class="signatures__subtext">Our favourites, made fresh and loaded with flavour.</p>
+        </header>
+
+        <!-- Desktop / tablet: cinematic grid. Mobile: swipe carousel (same markup, CSS handles both) -->
+        <div class="signatures__grid" role="list">
+            <article *ngFor="let dish of dishes; let i = index; trackBy: trackByDishId" role="listitem"
+                class="dish-card" [class.dish-card--featured]="dish.featured" [style.--i]="i">
+                <div class="dish-card__media">
+                    <img [src]="dish.image" [alt]="dish.alt" loading="lazy" />
+                    <span class="dish-card__sheen" aria-hidden="true"></span>
+                    <span class="dish-card__category">{{ dish.category }}</span>
+                </div>
+
+                <div class="dish-card__body">
+                    <div class="dish-card__top">
+                        <h3 class="dish-card__name">{{ dish.name }}</h3>
+                        <span class="dish-card__rating" *ngIf="dish.rating"
+                            [attr.aria-label]="'Rating ' + dish.rating + ' out of 5'">
+                            <span class="dish-card__star" aria-hidden="true">★</span>{{ dish.rating }}
+                        </span>
+                    </div>
+
+                    <p class="dish-card__desc">{{ dish.description }}</p>
+
+                    <div class="dish-card__bottom">
+                        <span class="dish-card__price">{{ dish.price }}</span>
+                        <button type="button" class="dish-card__cta">
+                            {{ dish.featured ? 'Order Now' : 'Add to Cart' }}
+                        </button>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <footer class="signatures__footer">
+            <a href="#full-menu" class="signatures__view-all">
+                View Full Menu <span aria-hidden="true">→</span>
+            </a>
+        </footer>
+
+    </div>
+</section>

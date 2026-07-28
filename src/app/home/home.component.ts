@@ -4,16 +4,30 @@ import {
   ElementRef,
   Renderer2,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  AfterViewInit,
+  ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
- * States used to drive the "travelling food photo" effect.
+ * States used to drive the "travelling food photo" effct.
  * Each food image lives OUTSIDE the normal slide flow (position: fixed)
  * so it can glide independently while the slide track moves underneath it.
  */
 type TravelState = 'enter-below' | 'center' | 'exit-above' | 'idle';
+
+interface SignatureDish {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  price: string;
+  rating: number;
+  image: string;
+  alt: string;
+  featured?: boolean;
+}
 
 @Component({
   selector: 'app-home',
@@ -22,7 +36,8 @@ type TravelState = 'enter-below' | 'center' | 'exit-above' | 'idle';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   /** Total number of slides in the carousel */
   readonly totalSlides = 4;
 
@@ -44,9 +59,61 @@ export class HomeComponent implements OnInit, OnDestroy {
   /** Respect users who prefer reduced motion */
   prefersReducedMotion = false;
 
+  dishes: SignatureDish[] = [
+    {
+      id: 'shawarma',
+      name: 'Signature Chicken Shawarma',
+      category: 'Shawarma',
+      description: 'Char-grilled chicken, house sauce, wrapped fresh to order.',
+      price: '₹179',
+      rating: 4.8,
+      image: '/assets/sig_menu/Shawarma.jpg',
+      alt: 'Signature Chicken Shawarma wrap sliced open, showing grilled chicken and fresh vegetables',
+      featured: true
+    },
+    {
+      id: 'burger',
+      name: 'Loaded Chicken Burger',
+      category: 'Burger',
+      description: 'Crispy chicken fillet, melted cheddar, saucy crunch.',
+      price: '₹249',
+      rating: 4.7,
+      image: '/assets/sig_menu/burgers.jpg',
+      alt: 'Loaded Chicken Burger with crispy fillet and melted cheddar on a brioche bun'
+    },
+    {
+      id: 'pasta',
+      name: 'Creamy Chicken Pasta',
+      category: 'Pasta',
+      description: 'Penne tossed in a rich, slow-simmered chicken cream sauce.',
+      price: '₹239',
+      rating: 4.6,
+      image: '/assets/sig_menu/pasta.jpg',
+      alt: 'Bowl of creamy chicken pasta topped with herbs'
+    },
+    {
+      id: 'momos',
+      name: 'Steamed Chicken Momos',
+      category: 'Momos',
+      description: 'Juicy hand-folded dumplings with spicy homemade chutney.',
+      price: '₹169',
+      rating: 4.9,
+      image: '/assets/sig_menu/momos.jpg',
+      alt: 'Plate of steamed chicken momos with spicy chutney'
+    }
+  ];
+
   private removeWheelListener?: () => void;
 
   constructor(private host: ElementRef<HTMLElement>, private renderer: Renderer2) { }
+
+  @ViewChild('sectionRoot', { static: true })
+  sectionRoot!: ElementRef<HTMLElement>;
+
+  isVisible = false;
+
+  private io?: IntersectionObserver;
+  private rafId: number | null = null;
 
   ngOnInit(): void {
     this.prefersReducedMotion =
@@ -60,21 +127,87 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.removeWheelListener?.();
+
+    this.io?.disconnect();
+
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.prefersReducedMotion) {
+      this.isVisible = true;
+      return;
+    }
+
+    this.setupObserver();
+  }
+
+  private setupObserver(): void {
+    if (typeof IntersectionObserver === 'undefined') {
+      this.isVisible = true;
+      return;
+    }
+
+    this.io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            this.isVisible = true;
+            this.io?.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.18 }
+    );
+
+    this.io.observe(this.sectionRoot.nativeElement);
+  }
+
+  trackByDishId(_index: number, dish: SignatureDish): string {
+    return dish.id;
   }
 
   @HostListener('window:scroll')
   onScroll(): void {
-    // Calculate how far the user has scrolled past the top
+    // ---------------- Home scroll progress ----------------
     const scrollY = window.scrollY || document.documentElement.scrollTop;
     const windowHeight = window.innerHeight;
 
-    // We only care about the first 100vh of scrolling (scrolling into the wrap section)
     let progress = scrollY / windowHeight;
     if (progress > 1) progress = 1;
     if (progress < 0) progress = 0;
 
-    // Set a CSS variable that we can use to drive animations based on scroll!
-    this.renderer.setStyle(this.host.nativeElement, '--scroll-progress', progress.toString());
+    this.renderer.setStyle(
+      this.host.nativeElement,
+      '--scroll-progress',
+      progress.toString()
+    );
+
+    // ---------------- Signature parallax ----------------
+    if (this.prefersReducedMotion || this.rafId !== null) {
+      return;
+    }
+
+    this.rafId = requestAnimationFrame(() => {
+      this.updateParallax();
+      this.rafId = null;
+    });
+  }
+
+  private updateParallax(): void {
+    const el = this.sectionRoot?.nativeElement;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const total = rect.height + vh;
+
+    let progress = (vh - rect.top) / total;
+    progress = Math.max(0, Math.min(1, progress));
+
+    el.style.setProperty('--section-progress', progress.toFixed(4));
   }
 
   /** CSS transform applied to the sliding track */
