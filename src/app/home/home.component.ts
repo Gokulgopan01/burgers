@@ -141,7 +141,24 @@ export class HomeComponent implements OnInit, OnDestroy {
   // ---------------------------------------------------------------------
   @HostListener('wheel', ['$event'])
   onWheel(event: WheelEvent): void {
+    // If the page is scrolled down past the top, allow native scrolling
+    if (window.scrollY > 0) {
+      return;
+    }
+
+    // If at the top and trying to scroll up, allow native behavior (e.g., bounce)
+    if (this.activeIndex === 0 && event.deltaY < 0) {
+      return;
+    }
+
+    // If at the last slide and trying to scroll down, allow native page scroll
+    if (this.activeIndex === this.totalSlides - 1 && event.deltaY > 0) {
+      return;
+    }
+
+    // Otherwise, we are inside the carousel navigating between slides
     event.preventDefault();
+
     if (this.isAnimating) return;
     if (Math.abs(event.deltaY) < this.wheelThreshold) return;
 
@@ -159,17 +176,39 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   @HostListener('touchmove', ['$event'])
   onTouchMove(event: TouchEvent): void {
+    // If the page is scrolled down past the top, allow native scrolling
+    if (window.scrollY > 0) {
+      return;
+    }
+
+    const currentY = event.touches[0].clientY;
+    const deltaY = this.touchStartY - currentY; // positive means swiping up (scrolling down)
+
+    // Allow pull-to-refresh / native bounce at the top
+    if (this.activeIndex === 0 && deltaY < 0) return;
+
+    // Allow native scroll down at the last slide
+    if (this.activeIndex === this.totalSlides - 1 && deltaY > 0) return;
+
+    // Prevent native scroll while navigating inside the carousel
     event.preventDefault();
   }
 
   @HostListener('touchend', ['$event'])
   onTouchEnd(event: TouchEvent): void {
+    // Only process if we didn't natively scroll
+    if (window.scrollY > 0) return;
+
     if (this.isAnimating) return;
     const touchEndY = event.changedTouches[0].clientY;
     const delta = this.touchStartY - touchEndY;
     const swipeThreshold = 50;
 
     if (Math.abs(delta) < swipeThreshold) return;
+
+    // We also shouldn't change slide if we allowed native scrolling for this swipe
+    if (this.activeIndex === 0 && delta < 0) return;
+    if (this.activeIndex === this.totalSlides - 1 && delta > 0) return;
 
     if (delta > 0) {
       this.goNext();

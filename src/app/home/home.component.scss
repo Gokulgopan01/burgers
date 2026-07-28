@@ -264,7 +264,7 @@
 // viewport independent of the slide track underneath them.
 // ---------------------------------------------------------------------------
 .food-photo {
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     z-index: 5;
@@ -339,7 +339,7 @@
 // Dot navigation
 // ---------------------------------------------------------------------------
 .dots-nav {
-    position: fixed;
+    position: absolute;
     left: clamp(1.2rem, 3vw, 2.4rem);
     top: 50%;
     transform: translateY(-50%);
@@ -385,7 +385,7 @@
 // Brand mark
 // ---------------------------------------------------------------------------
 .brand-mark {
-    position: fixed;
+    position: absolute;
     top: 1.6rem;
     left: 1.8rem;
     z-index: 10;
@@ -413,7 +413,7 @@
 // Scroll hint
 // ---------------------------------------------------------------------------
 .scroll-hint {
-    position: fixed;
+    position: absolute;
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
