@@ -85,8 +85,8 @@
 
 .bg--juice {
     background-image:
-        linear-gradient(180deg, rgba(201, 42, 99, 0.35) 0%, rgba(153, 20, 66, 0.55) 100%),
-        url("/assets/home/strawberry_juice_background.png");
+        // linear-gradient(180deg, rgba(201, 42, 99, 0.35) 0%, rgba(153, 20, 66, 0.55) 100%),
+        url("/assets/home/shawarma_roll_background.png");
     background-color: var(--pink-deep);
 }
 
@@ -749,6 +749,92 @@
 
 
 
+
+
+/*=====================================================
+                    TICKER / MARQUEE
+======================================================*/
+
+.marquee-section {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    background: #111;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.marquee {
+    position: absolute;
+    width: 110%;
+    left: -5%;
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 12px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+
+    &--yellow {
+        background: var(--gold);
+        color: #2f1506;
+        transform: rotate(3deg);
+        z-index: 1;
+        margin-top: -12px;
+    }
+
+    &--red {
+        background: var(--red-glow);
+        color: var(--cream);
+        transform: rotate(-2deg);
+        z-index: 2;
+        margin-top: 12px;
+    }
+
+    &__track {
+        display: flex;
+        width: max-content;
+        animation: marquee-scroll 25s linear infinite;
+        will-change: transform;
+
+        &--reverse {
+            animation-direction: reverse;
+        }
+
+        span {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            letter-spacing: 0.1em;
+            padding-right: 0.5em;
+            text-transform: uppercase;
+        }
+    }
+
+    @media (max-width: 768px) {
+        &--yellow {
+            transform: rotate(6deg);
+            margin-top: -15px;
+        }
+        &--red {
+            transform: rotate(-4deg);
+            margin-top: 15px;
+        }
+        &__track span {
+            font-size: 1.2rem;
+        }
+    }
+}
+
+@keyframes marquee-scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
 
 
 /*=====================================================
