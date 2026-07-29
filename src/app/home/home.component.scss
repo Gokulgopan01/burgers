@@ -175,7 +175,7 @@
     text-align: center;
     color: var(--cream);
     opacity: 0;
-    transition: opacity 0.8s ease 0.15s, transform 0.9s var(--transition-ease) 0.15s;
+    transition: opacity 1s ease 0.3s, transform 1.2s var(--transition-ease) 0.3s;
 
     &.in-view {
         opacity: 1;
@@ -216,7 +216,7 @@
     &.in-view {
         transform: translate(-50%, 0);
     }
-    
+
     &.past {
         transform: translate(calc(-50% - 100vw), 0);
     }
@@ -240,7 +240,7 @@
     &.in-view {
         transform: translate(-50%, 0);
     }
-    
+
     &.past {
         transform: translate(calc(-50% - 100vw), 0);
     }
@@ -256,7 +256,7 @@
     &.in-view {
         transform: translate(-50%, 0);
     }
-    
+
     &.past {
         transform: translate(calc(-50% - 100vw), 0);
     }
@@ -316,8 +316,8 @@
     z-index: 5;
     pointer-events: none;
     transition:
-        transform var(--transition-speed) var(--transition-ease),
-        opacity 0.6s ease;
+        transform 1.2s var(--transition-ease) 0.2s,
+        opacity 0.8s ease 0.2s;
     filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.45));
 }
 
