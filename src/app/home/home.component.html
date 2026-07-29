@@ -23,7 +23,8 @@
             <div class="bg bg--juice" [class.in-view]="activeIndex === 0"></div>
             <div class="bg-watermark">WRAPPED</div>
 
-            <div class="slide-copy slide-copy--juice" [class.in-view]="activeIndex === 0">
+            <div class="slide-copy slide-copy--juice" [class.in-view]="activeIndex === 0"
+                [class.past]="activeIndex > 0">
                 <span class="eyebrow">wrapped fresh, grilled to perfection</span>
                 <h1 class="headline">Roll With It</h1>
             </div>
@@ -34,7 +35,8 @@
             <div class="bg bg--burger" [class.in-view]="activeIndex === 1"></div>
             <!-- <div class="bg-watermark bg-watermark--right">STACK</div> -->
 
-            <div class="slide-copy slide-copy--burger" [class.in-view]="activeIndex === 1">
+            <div class="slide-copy slide-copy--burger" [class.in-view]="activeIndex === 1"
+                [class.past]="activeIndex > 1" [class.future]="activeIndex < 1">
                 <span class="eyebrow">big bites, bold flavours</span>
                 <h1 class="headline">Stacked<br />Happiness</h1>
             </div>
@@ -45,7 +47,8 @@
             <div class="bg bg--fries" [class.in-view]="activeIndex === 2"></div>
             <div class="bg-watermark">TWIRLED</div>
 
-            <div class="slide-copy slide-copy--fries" [class.in-view]="activeIndex === 2">
+            <div class="slide-copy slide-copy--fries" [class.in-view]="activeIndex === 2" [class.past]="activeIndex > 2"
+                [class.future]="activeIndex < 2">
                 <span class="eyebrow">creamy, saucy, simply irresistible</span>
                 <h1 class="headline">Twirl Into Joy</h1>
             </div>
@@ -56,7 +59,8 @@
             <div class="bg bg--dessert" [class.in-view]="activeIndex === 3"></div>
             <div class="bg-watermark">STEAMED</div>
 
-            <div class="slide-copy slide-copy--dessert" [class.in-view]="activeIndex === 3">
+            <div class="slide-copy slide-copy--dessert" [class.in-view]="activeIndex === 3"
+                [class.future]="activeIndex < 3">
                 <span class="eyebrow">spiced right, steamed soft</span>
                 <h1 class="headline">Momos<br />Mania</h1>
             </div>
@@ -212,7 +216,8 @@
 
 
 
-<section class="signatures" #sectionRoot [class.is-visible]="isVisible" [class.reduced-motion]="prefersReducedMotion" aria-labelledby="signatures-heading">
+<section class="signatures" #sectionRoot [class.is-visible]="isVisible" [class.reduced-motion]="prefersReducedMotion"
+    aria-labelledby="signatures-heading">
     <!-- Subtle Background Elements -->
     <div class="signatures__bg"></div>
     <span class="signatures__watermark" aria-hidden="true">SIGNATURES</span>
@@ -226,16 +231,17 @@
                 <h2 class="signatures__heading" id="signatures-heading">Made To Be Remembered</h2>
                 <p class="signatures__subtext">Our most-loved dishes, prepared fresh and loaded with flavour.</p>
             </header>
-            
+
             <!-- Large Appetising Food Image in the upper right -->
             <div class="signatures__hero-image-wrapper">
-                 <img src="/assets/sig_menu/Shawarma.jpg" alt="Signature Shawarma" class="signatures__hero-image">
+                <img src="/assets/sig_menu/Shawarma.jpg" alt="Signature Shawarma" class="signatures__hero-image">
             </div>
         </div>
 
         <!-- Horizontal Signature Showcase (Editorial Layout) -->
         <div class="signatures__showcase" role="list">
-            <article *ngFor="let dish of dishes; let i = index; trackBy: trackByDishId" role="listitem" class="food-card" [style.--i]="i">
+            <article *ngFor="let dish of dishes; let i = index; trackBy: trackByDishId" role="listitem"
+                class="food-card" [style.--i]="i">
                 <div class="food-card__media">
                     <img [src]="dish.image" [alt]="dish.alt" loading="lazy" />
                     <span class="food-card__category">{{ dish.category }}</span>

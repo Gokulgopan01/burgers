@@ -175,12 +175,10 @@
     text-align: center;
     color: var(--cream);
     opacity: 0;
-    transform: translateY(28px);
     transition: opacity 0.8s ease 0.15s, transform 0.9s var(--transition-ease) 0.15s;
 
     &.in-view {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
@@ -213,10 +211,14 @@
     position: absolute;
     top: 12%;
     left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(calc(-50% + 15vw), 0);
 
     &.in-view {
         transform: translate(-50%, 0);
+    }
+    
+    &.past {
+        transform: translate(calc(-50% - 15vw), 0);
     }
 }
 
@@ -233,10 +235,14 @@
     position: absolute;
     top: 10%;
     left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(calc(-50% + 15vw), 0);
 
     &.in-view {
         transform: translate(-50%, 0);
+    }
+    
+    &.past {
+        transform: translate(calc(-50% - 15vw), 0);
     }
 }
 
@@ -245,10 +251,14 @@
     position: absolute;
     top: 10%;
     left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(calc(-50% + 15vw), 0);
 
     &.in-view {
         transform: translate(-50%, 0);
+    }
+    
+    &.past {
+        transform: translate(calc(-50% - 15vw), 0);
     }
 }
 
@@ -335,7 +345,8 @@
 // same way so swapping them for <img> tags later is a drop-in change.
 
 // Shared travel states -------------------------------------------------------
-.enter-below {
+.enter-below,
+.exit-above {
     transform: translate(-50%, 120%) scale(0.82) rotate(4deg);
     opacity: 0;
 }
@@ -343,11 +354,6 @@
 .center {
     transform: translate(-50%, -50%) scale(1) rotate(0deg);
     opacity: 1;
-}
-
-.exit-above {
-    transform: translate(-50%, -170%) scale(0.82) rotate(-4deg);
-    opacity: 0;
 }
 
 .idle {
