@@ -1,31 +1,97 @@
-<main class="menu-page">
-    <header class="menu-header">
-        <a routerLink="/" class="back-link">
-            <span aria-hidden="true">←</span> Back Home
-        </a>
-        <div class="brand">
-            <span class="brand__main">Cochin</span>
-            <span class="brand__sub">Vista</span>
-        </div>
-        <h1>Our Menu</h1>
-        <p class="subtitle">European Flavours &bull; Bold Taste &bull; Real Satisfaction</p>
-    </header>
+<section class="menu-section" aria-labelledby="menu-title">
+
+    <!-- Ambient background: blurred blobs + floating spice particles -->
+    <div class="bg-blobs" aria-hidden="true">
+        <span class="blob blob-orange"></span>
+        <span class="blob blob-gold"></span>
+        <span class="blob blob-cream"></span>
+    </div>
+
+    <div class="particles" aria-hidden="true">
+        <span *ngFor="let p of particles" class="particle" [style.left.%]="p.left" [style.animation-delay.s]="p.delay"
+            [style.animation-duration.s]="p.duration">{{ p.symbol }}</span>
+    </div>
 
     <div class="menu-container">
-        <section class="menu-category" *ngFor="let category of categories">
-            <h2 class="category-title"><span>{{ category.title }}</span></h2>
-            
-            <div class="menu-grid">
-                <article class="menu-item" *ngFor="let item of category.items">
-                    <div class="menu-item__content">
-                        <h3 class="menu-item__name">{{ item.name }}</h3>
-                        <p class="menu-item__desc" *ngIf="item.description">{{ item.description }}</p>
-                    </div>
-                    <div class="menu-item__price">
-                        <span class="currency">₹</span>{{ item.price }}
-                    </div>
-                </article>
+
+        <!-- Header -->
+        <header class="menu-header">
+            <a routerLink="/" class="back-btn" aria-label="Go back to home">
+                <span aria-hidden="true">←</span> Back
+            </a>
+            <h2 id="menu-title" class="menu-title">Our Menu</h2>
+            <p class="menu-subtitle">Discover authentic flavours crafted with fresh ingredients.</p>
+        </header>
+
+        <!-- Category pills -->
+        <nav class="category-pills" role="tablist" aria-label="Filter menu by category">
+            <button *ngFor="let cat of categories; trackBy: trackByCategory" type="button" role="tab" class="pill"
+                [class.active]="activeCategory() === cat" [attr.aria-selected]="activeCategory() === cat"
+                (click)="selectCategory(cat)">
+                {{ cat }}
+            </button>
+        </nav>
+
+        <div class="divider" aria-hidden="true">
+            <span class="line"></span>
+            <span class="icon">🍽️</span>
+            <span class="line"></span>
+        </div>
+
+        <!-- Skeleton loading state -->
+        <div class="menu-grid" *ngIf="isLoading()">
+            <div class="skeleton-card" *ngFor="let s of [1,2,3,4,5,6,7,8]">
+                <div class="skeleton-img shimmer"></div>
+                <div class="skeleton-line shimmer w-70"></div>
+                <div class="skeleton-line shimmer w-90"></div>
+                <div class="skeleton-line shimmer w-40"></div>
             </div>
-        </section>
+        </div>
+
+        <!-- Product grid -->
+        <div class="menu-grid" *ngIf="!isLoading()" [class.switching]="isSwitching()">
+
+            <ng-container *ngIf="filteredProducts().length > 0; else emptyState">
+                <article #cardEl *ngFor="let item of filteredProducts(); let i = index; trackBy: trackByProduct"
+                    class="food-card" tabindex="0" [attr.data-id]="item.id" [style.--delay.ms]="i * 120"
+                    (mousemove)="onCardMouseMove($event, cardEl)" (mouseleave)="onCardMouseLeave(cardEl)">
+
+                    <span class="card-glow" aria-hidden="true"></span>
+                    <span class="sparkles" aria-hidden="true">
+                        <i></i><i></i><i></i><i></i><i></i>
+                    </span>
+
+                    <div class="image-wrap">
+                        <span class="food-emoji" role="img" [attr.aria-label]="item.name">{{ item.emoji }}</span>
+                        <span class="shine" aria-hidden="true"></span>
+                    </div>
+
+                    <h3 class="food-name">{{ item.name }}</h3>
+                    <p class="food-desc">{{ item.description }}</p>
+
+                    <div class="meta-row">
+                        <span class="rating">⭐ {{ item.rating }}</span>
+                        <span class="price">
+                            <span class="price-value" [attr.data-target]="item.price">₹0</span>
+                        </span>
+                    </div>
+
+                    <button type="button" class="add-btn" [attr.aria-label]="'Add ' + item.name + ' to cart'"
+                        (click)="createRipple($event)">
+                        <span class="plus">+</span>
+                        <span class="label">Add</span>
+                    </button>
+                </article>
+            </ng-container>
+
+            <ng-template #emptyState>
+                <div class="empty-state">
+                    <span class="empty-icon" aria-hidden="true">🍽️</span>
+                    <h3>No items available</h3>
+                    <p>Please check another category.</p>
+                </div>
+            </ng-template>
+        </div>
+
     </div>
-</main>
+</section>
