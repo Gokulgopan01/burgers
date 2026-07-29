@@ -211,14 +211,14 @@
     position: absolute;
     top: 12%;
     left: 50%;
-    transform: translate(calc(-50% + 15vw), 0);
+    transform: translate(calc(-50% + 100vw), 0);
 
     &.in-view {
         transform: translate(-50%, 0);
     }
     
     &.past {
-        transform: translate(calc(-50% - 15vw), 0);
+        transform: translate(calc(-50% - 100vw), 0);
     }
 }
 
@@ -235,14 +235,14 @@
     position: absolute;
     top: 10%;
     left: 50%;
-    transform: translate(calc(-50% + 15vw), 0);
+    transform: translate(calc(-50% + 100vw), 0);
 
     &.in-view {
         transform: translate(-50%, 0);
     }
     
     &.past {
-        transform: translate(calc(-50% - 15vw), 0);
+        transform: translate(calc(-50% - 100vw), 0);
     }
 }
 
@@ -251,14 +251,14 @@
     position: absolute;
     top: 10%;
     left: 50%;
-    transform: translate(calc(-50% + 15vw), 0);
+    transform: translate(calc(-50% + 100vw), 0);
 
     &.in-view {
         transform: translate(-50%, 0);
     }
     
     &.past {
-        transform: translate(calc(-50% - 15vw), 0);
+        transform: translate(calc(-50% - 100vw), 0);
     }
 }
 
