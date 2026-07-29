@@ -1,0 +1,31 @@
+<main class="menu-page">
+    <header class="menu-header">
+        <a routerLink="/" class="back-link">
+            <span aria-hidden="true">←</span> Back Home
+        </a>
+        <div class="brand">
+            <span class="brand__main">Cochin</span>
+            <span class="brand__sub">Vista</span>
+        </div>
+        <h1>Our Menu</h1>
+        <p class="subtitle">European Flavours &bull; Bold Taste &bull; Real Satisfaction</p>
+    </header>
+
+    <div class="menu-container">
+        <section class="menu-category" *ngFor="let category of categories">
+            <h2 class="category-title"><span>{{ category.title }}</span></h2>
+            
+            <div class="menu-grid">
+                <article class="menu-item" *ngFor="let item of category.items">
+                    <div class="menu-item__content">
+                        <h3 class="menu-item__name">{{ item.name }}</h3>
+                        <p class="menu-item__desc" *ngIf="item.description">{{ item.description }}</p>
+                    </div>
+                    <div class="menu-item__price">
+                        <span class="currency">₹</span>{{ item.price }}
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+</main>

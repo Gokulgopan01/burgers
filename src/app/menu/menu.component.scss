@@ -1,0 +1,255 @@
+// Variables
+$bg-color: #fffcf8;
+$text-primary: #2c2520;
+$text-secondary: #6a5e55;
+$accent-color: #e86c1d;
+$price-bg: #1c1a17;
+$border-color: rgba(44, 37, 32, 0.1);
+
+.menu-page {
+    background-color: $bg-color;
+    color: $text-primary;
+    min-height: 100vh;
+    padding-bottom: 80px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.menu-header {
+    text-align: center;
+    padding: 60px 20px 40px;
+    background-color: #111;
+    color: #fffcf8;
+    position: relative;
+    border-bottom: 4px solid $accent-color;
+
+    .back-link {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: #fffcf8;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        opacity: 0.8;
+        transition: opacity 0.3s;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .brand {
+        margin-bottom: 20px;
+        line-height: 1;
+
+        &__main {
+            font-family: 'Caveat', cursive;
+            font-size: 4rem;
+            color: #fff;
+            display: block;
+        }
+        &__sub {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2.5rem;
+            color: $accent-color;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: -10px;
+            display: block;
+        }
+    }
+
+    h1 {
+        font-family: 'Archivo Black', sans-serif;
+        font-size: 3.5rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin: 0 0 10px;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.6);
+        margin: 0;
+    }
+}
+
+.menu-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.menu-category {
+    .category-title {
+        font-family: 'Archivo Black', sans-serif;
+        font-size: 2rem;
+        color: $text-primary;
+        text-transform: uppercase;
+        margin: 0 0 40px;
+        text-align: center;
+        position: relative;
+
+        span {
+            background-color: $text-primary;
+            color: #fff;
+            padding: 8px 24px;
+            border-radius: 4px;
+            display: inline-block;
+            box-shadow: 3px 3px 0 $accent-color;
+        }
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: $text-primary;
+            z-index: -1;
+        }
+    }
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 30px;
+}
+
+.menu-item {
+    background: #fff;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 10px 30px -15px rgba(0,0,0,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px -10px rgba(0,0,0,0.1);
+    }
+
+    &__content {
+        flex: 1;
+    }
+
+    &__name {
+        font-family: 'Archivo Black', sans-serif;
+        font-size: 1.25rem;
+        color: $text-primary;
+        margin: 0 0 8px;
+        text-transform: uppercase;
+    }
+
+    &__desc {
+        font-size: 0.9rem;
+        color: $text-secondary;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    &__price {
+        font-family: 'Archivo Black', sans-serif;
+        font-size: 1.4rem;
+        color: $accent-color;
+        background: $price-bg;
+        padding: 12px 20px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 90px;
+        
+        .currency {
+            font-size: 1rem;
+            margin-right: 2px;
+            opacity: 0.8;
+        }
+    }
+}
+
+// Mobile SCSS for widths 360px to 450px
+@media (max-width: 600px) {
+    .menu-header {
+        padding: 40px 15px 30px;
+
+        .brand__main { font-size: 3rem; }
+        .brand__sub { font-size: 2rem; margin-top: -5px; }
+        h1 { font-size: 2.2rem; }
+        .subtitle { font-size: 0.7rem; letter-spacing: 0.1em; }
+    }
+
+    .menu-container {
+        padding: 40px 15px;
+        gap: 45px;
+    }
+}
+
+@media (min-width: 360px) and (max-width: 450px) {
+    .menu-category .category-title {
+        font-size: 1.3rem;
+        margin: 0 0 25px;
+
+        span {
+            padding: 6px 16px;
+        }
+    }
+
+    .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .menu-item {
+        padding: 20px 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        border-radius: 10px;
+
+        &__content {
+            width: 100%;
+        }
+
+        &__name {
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+        }
+
+        &__desc {
+            font-size: 0.85rem;
+        }
+
+        &__price {
+            align-self: flex-start;
+            padding: 8px 16px;
+            font-size: 1.25rem;
+            min-width: auto;
+        }
+    }
+}
+
+@media (max-width: 359px) {
+    .menu-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .menu-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
