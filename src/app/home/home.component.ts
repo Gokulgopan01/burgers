@@ -1,15 +1,18 @@
 import {
   Component,
-  HostListener,
   ElementRef,
   Renderer2,
   OnInit,
   OnDestroy,
   AfterViewInit,
-  ViewChild
+  ViewChild,
+  Inject,
+  PLATFORM_ID
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 /**
  * States used to drive the "travelling food photo" effct.
@@ -37,26 +40,7 @@ interface SignatureDish {
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent
-  implements OnInit, AfterViewInit, OnDestroy {
-  /** Total number of slides in the carousel */
-  readonly totalSlides = 4;
-
-  /** Index of the currently active slide (0-based) */
-  activeIndex = 0;
-
-  /** Locks input while a slide transition is in-flight */
-  private isAnimating = false;
-
-  /** How long a slide transition takes — must match the SCSS transition duration */
-  private readonly transitionDuration = 950;
-
-  /** Minimum wheel delta before we treat it as an intentional scroll */
-  private readonly wheelThreshold = 12;
-
-  /** Touch tracking */
-  private touchStartY = 0;
-
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   /** Respect users who prefer reduced motion */
   prefersReducedMotion = false;
 
@@ -104,53 +88,36 @@ export class HomeComponent
     }
   ];
 
-  private removeWheelListener?: () => void;
-
-  constructor(private host: ElementRef<HTMLElement>, private renderer: Renderer2) { }
+  constructor(
+    private host: ElementRef<HTMLElement>,
+    private renderer: Renderer2,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) { }
 
   @ViewChild('sectionRoot', { static: true })
   sectionRoot!: ElementRef<HTMLElement>;
 
+  @ViewChild('carouselContainer', { static: true })
+  carouselContainer!: ElementRef<HTMLElement>;
+
   isVisible = false;
 
   private io?: IntersectionObserver;
-  private rafId: number | null = null;
+  private scrollTriggerInstance?: ScrollTrigger;
+  private removeScrollLock?: () => void;
 
   ngOnInit(): void {
     this.prefersReducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Give the carousel keyboard focus so arrow keys work immediately
-    const viewport = this.host.nativeElement.querySelector('.carousel-viewport') as HTMLElement | null;
-    if (viewport) {
-      viewport.setAttribute('tabindex', '0');
-
-      // Attach non-passive wheel and touchmove listeners to ensure preventDefault() works
-      // and stops Lenis from scrolling the page during carousel transitions.
-      viewport.addEventListener('wheel', this.onWheelNative as EventListener, { passive: false });
-      viewport.addEventListener('touchmove', this.onTouchMoveNative as EventListener, { passive: false });
-      viewport.addEventListener('touchstart', this.onTouchStartNative as EventListener, { passive: false });
-      viewport.addEventListener('touchend', this.onTouchEndNative as EventListener, { passive: false });
-    }
   }
 
   ngOnDestroy(): void {
-    this.removeWheelListener?.();
-
-    const viewport = this.host.nativeElement.querySelector('.carousel-viewport') as HTMLElement | null;
-    if (viewport) {
-      viewport.removeEventListener('wheel', this.onWheelNative as EventListener);
-      viewport.removeEventListener('touchmove', this.onTouchMoveNative as EventListener);
-      viewport.removeEventListener('touchstart', this.onTouchStartNative as EventListener);
-      viewport.removeEventListener('touchend', this.onTouchEndNative as EventListener);
-    }
-
+    this.removeScrollLock?.();
     this.io?.disconnect();
-
-    if (this.rafId !== null) {
-      cancelAnimationFrame(this.rafId);
+    if (this.scrollTriggerInstance) {
+      this.scrollTriggerInstance.kill();
     }
   }
 
@@ -161,6 +128,11 @@ export class HomeComponent
     }
 
     this.setupObserver();
+
+    if (isPlatformBrowser(this.platformId)) {
+      this.setupScrollTrigger();
+      this.setupScrollLock();
+    }
   }
 
   private setupObserver(): void {
@@ -188,218 +160,114 @@ export class HomeComponent
     return dish.id;
   }
 
-  @HostListener('window:scroll')
-  onScroll(): void {
-    // ---------------- Home scroll progress ----------------
-    const scrollY = window.scrollY || document.documentElement.scrollTop;
-    const windowHeight = window.innerHeight;
+  private setupScrollTrigger(): void {
+    gsap.registerPlugin(ScrollTrigger);
 
-    let progress = scrollY / windowHeight;
-    if (progress > 1) progress = 1;
-    if (progress < 0) progress = 0;
+    // Initial setup
+    gsap.set('.slide-copy', { x: '100vw', xPercent: -50, opacity: 0 });
+    gsap.set('.slide-copy--juice', { x: 0, xPercent: -50, opacity: 1 }); // first slide active
 
-    this.renderer.setStyle(
-      this.host.nativeElement,
-      '--scroll-progress',
-      progress.toString()
-    );
+    gsap.set('.bg', { opacity: 0, scale: 1.06 });
+    gsap.set('.bg--juice', { opacity: 1, scale: 1 });
 
-    // ---------------- Signature parallax ----------------
-    if (this.prefersReducedMotion || this.rafId !== null) {
-      return;
-    }
+    gsap.set('.food-photo', { y: '120vh', yPercent: -50, xPercent: -50, scale: 0.82, rotation: 4, opacity: 0 });
+    gsap.set('.food-photo--juice', { y: 0, yPercent: -50, xPercent: -50, scale: 1, rotation: 0, opacity: 1 });
 
-    this.rafId = requestAnimationFrame(() => {
-      this.updateParallax();
-      this.rafId = null;
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: this.carouselContainer.nativeElement,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 2, // Increased from 1 for extra buttery smoothness
+      }
     });
+
+    // We have 4 slides. To go from slide 1 to 4, we have 3 transitions.
+    // Transition 1: Juice -> Burger
+    tl.to('.slides-track', { yPercent: -25, ease: 'none', duration: 1 }, 0)
+      .to('.bg--juice', { opacity: 0, scale: 1.06, duration: 0.5 }, 0)
+      .to('.slide-copy--juice', { opacity: 0, x: '-100vw', duration: 0.5 }, 0)
+      .to('.food-photo--juice', { opacity: 0, y: '-120vh', rotation: -4, scale: 0.82, duration: 0.5 }, 0)
+
+      .to('.bg--burger', { opacity: 1, scale: 1, duration: 0.5 }, 0.5)
+      .to('.slide-copy--burger', { opacity: 1, x: 0, duration: 0.5 }, 0.5)
+      .to('.food-photo--burger', { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.5 }, 0.5);
+
+    // Transition 2: Burger -> Fries
+    tl.to('.slides-track', { yPercent: -50, ease: 'none', duration: 1 }, 1)
+      .to('.bg--burger', { opacity: 0, scale: 1.06, duration: 0.5 }, 1)
+      .to('.slide-copy--burger', { opacity: 0, x: '-100vw', duration: 0.5 }, 1)
+      .to('.food-photo--burger', { opacity: 0, y: '-120vh', rotation: -4, scale: 0.82, duration: 0.5 }, 1)
+
+      .to('.bg--fries', { opacity: 1, scale: 1, duration: 0.5 }, 1.5)
+      .to('.slide-copy--fries', { opacity: 1, x: 0, duration: 0.5 }, 1.5)
+      .to('.food-photo--fries', { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.5 }, 1.5);
+
+    // Transition 3: Fries -> Dessert
+    tl.to('.slides-track', { yPercent: -75, ease: 'none', duration: 1 }, 2)
+      .to('.bg--fries', { opacity: 0, scale: 1.06, duration: 0.5 }, 2)
+      .to('.slide-copy--fries', { opacity: 0, x: '-100vw', duration: 0.5 }, 2)
+      .to('.food-photo--fries', { opacity: 0, y: '-120vh', rotation: -4, scale: 0.82, duration: 0.5 }, 2)
+
+      .to('.bg--dessert', { opacity: 1, scale: 1, duration: 0.5 }, 2.5)
+      .to('.slide-copy--dessert', { opacity: 1, x: 0, duration: 0.5 }, 2.5)
+      .to('.food-photo--dessert', { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.5 }, 2.5);
+
+    this.scrollTriggerInstance = tl.scrollTrigger;
   }
 
-  private updateParallax(): void {
-    const el = this.sectionRoot?.nativeElement;
-    if (!el) return;
+  private setupScrollLock(): void {
+    let isScrolling = false;
 
-    const rect = el.getBoundingClientRect();
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    const total = rect.height + vh;
+    const onWheel = (e: WheelEvent) => {
+      const lenis = (window as any).lenis;
+      if (!lenis) return;
 
-    let progress = (vh - rect.top) / total;
-    progress = Math.max(0, Math.min(1, progress));
+      const currentScroll = window.scrollY;
+      const vh = window.innerHeight;
+      const carouselTop = this.carouselContainer.nativeElement.offsetTop;
 
-    el.style.setProperty('--section-progress', progress.toFixed(4));
-  }
+      const offset = currentScroll - carouselTop;
 
-  /** CSS transform applied to the sliding track */
-  get trackTransform(): string {
-    // Use % instead of vh so it works perfectly on mobile browsers
-    // where the address bar changes the actual viewport height dynamically.
-    // The track holds all slides, so each slide is exactly (100 / totalSlides)% of the track's total height.
-    return `translate3d(0, -${(this.activeIndex * 100) / this.totalSlides}%, 0)`;
-  }
-
-  // ---------------------------------------------------------------------
-  // Travel state for the strawberry juice photo
-  // idle at slide 0 => centered
-  // once we move past slide 0, it exits upward and stays gone
-  // ---------------------------------------------------------------------
-  get juiceState(): TravelState {
-    if (this.activeIndex === 0) return 'center';
-    return 'exit-above';
-  }
-
-  // ---------------------------------------------------------------------
-  // Travel state for the burger photo
-  // waits below the viewport until slide 1 becomes active, then glides
-  // to dead-center; once we move past slide 1 it exits upward too
-  // ---------------------------------------------------------------------
-  get burgerState(): TravelState {
-    if (this.activeIndex < 1) return 'enter-below';
-    if (this.activeIndex === 1) return 'center';
-    return 'exit-above';
-  }
-
-  get friesState(): TravelState {
-    if (this.activeIndex < 2) return 'enter-below';
-    if (this.activeIndex === 2) return 'center';
-    return 'exit-above';
-  }
-
-  get dessertState(): TravelState {
-    if (this.activeIndex < 3) return 'enter-below';
-    return 'center';
-  }
-
-  /** Jump straight to a slide (used by the dot navigation) */
-  goTo(index: number): void {
-    if (index === this.activeIndex || this.isAnimating) return;
-    this.setActive(index);
-  }
-
-  private setActive(index: number): void {
-    this.activeIndex = Math.max(0, Math.min(this.totalSlides - 1, index));
-    this.isAnimating = true;
-    window.setTimeout(() => {
-      this.isAnimating = false;
-    }, this.prefersReducedMotion ? 0 : this.transitionDuration);
-  }
-
-  private goNext(): void {
-    if (this.activeIndex < this.totalSlides - 1) this.setActive(this.activeIndex + 1);
-  }
-
-  private goPrev(): void {
-    if (this.activeIndex > 0) this.setActive(this.activeIndex - 1);
-  }
-
-  // ---------------------------------------------------------------------
-  // Input handlers — mouse wheel, touch swipe, keyboard
-  // ---------------------------------------------------------------------
-
-  onWheelNative = (event: WheelEvent): void => {
-    // If the page is scrolled down past the top, allow native scrolling
-    if (window.scrollY > 0) {
-      return;
-    }
-
-    // If at the top and trying to scroll up, allow native behavior (e.g., bounce)
-    if (this.activeIndex === 0 && event.deltaY < 0) {
-      return;
-    }
-
-    // If at the last slide and trying to scroll down
-    if (this.activeIndex === this.totalSlides - 1 && event.deltaY > 0) {
-      // If we are currently animating into the last slide, prevent native scroll
-      // so we don't accidentally skip past it in one scroll motion.
-      if (this.isAnimating) {
-        event.preventDefault();
-        event.stopPropagation();
+      // If we are significantly above or below the carousel, let native scroll handle it
+      if (offset < -10 || offset > vh * 3 + 10) {
         return;
       }
-      return; // allow native page scroll
-    }
 
-    // Otherwise, we are inside the carousel navigating between slides
-    event.preventDefault();
-    event.stopPropagation(); // Prevent Lenis from picking up the event
+      const currentSlide = Math.round(offset / vh);
 
-    if (this.isAnimating) return;
-    if (Math.abs(event.deltaY) < this.wheelThreshold) return;
-
-    if (event.deltaY > 0) {
-      this.goNext();
-    } else {
-      this.goPrev();
-    }
-  }
-
-  onTouchStartNative = (event: TouchEvent): void => {
-    this.touchStartY = event.touches[0].clientY;
-  }
-
-  onTouchMoveNative = (event: TouchEvent): void => {
-    // If the page is scrolled down past the top, allow native scrolling
-    if (window.scrollY > 0) {
-      return;
-    }
-
-    const currentY = event.touches[0].clientY;
-    const deltaY = this.touchStartY - currentY; // positive means swiping up (scrolling down)
-
-    // Allow pull-to-refresh / native bounce at the top
-    if (this.activeIndex === 0 && deltaY < 0) return;
-
-    // Allow native scroll down at the last slide
-    if (this.activeIndex === this.totalSlides - 1 && deltaY > 0) {
-      if (this.isAnimating) {
-        event.preventDefault();
-        event.stopPropagation();
-        return;
+      let nextSlide = currentSlide;
+      if (e.deltaY > 0) {
+        if (currentSlide < 3) nextSlide++;
+        else return; // let native scroll exit downwards
+      } else {
+        if (currentSlide > 0) nextSlide--;
+        else return; // let native scroll exit upwards
       }
-      return;
-    }
 
-    // Prevent native scroll while navigating inside the carousel
-    event.preventDefault();
-    event.stopPropagation();
-  }
+      // We are inside the carousel navigating between slides. Prevent native scroll
+      e.preventDefault();
 
-  onTouchEndNative = (event: TouchEvent): void => {
-    // Only process if we didn't natively scroll
-    if (window.scrollY > 0) return;
+      if (isScrolling) return;
+      isScrolling = true;
 
-    if (this.isAnimating) return;
-    const touchEndY = event.changedTouches[0].clientY;
-    const delta = this.touchStartY - touchEndY;
-    const swipeThreshold = 50;
+      const targetScroll = carouselTop + nextSlide * vh;
 
-    if (Math.abs(delta) < swipeThreshold) return;
+      lenis.scrollTo(targetScroll, {
+        duration: 1.8,
+        easing: (t: number) => t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2, // Smooth Quartic in-out
+        lock: true,
+        onComplete: () => {
+          isScrolling = false;
+        }
+      });
+    };
 
-    // We also shouldn't change slide if we allowed native scrolling for this swipe
-    if (this.activeIndex === 0 && delta < 0) return;
-    if (this.activeIndex === this.totalSlides - 1 && delta > 0) return;
+    // Use passive: false to allow e.preventDefault()
+    window.addEventListener('wheel', onWheel, { passive: false });
 
-    if (delta > 0) {
-      this.goNext();
-    } else {
-      this.goPrev();
-    }
-  }
-
-  @HostListener('window:keydown', ['$event'])
-  onKeydown(event: KeyboardEvent): void {
-    if (this.isAnimating) return;
-
-    switch (event.key) {
-      case 'ArrowDown':
-      case 'PageDown':
-        event.preventDefault();
-        this.goNext();
-        break;
-      case 'ArrowUp':
-      case 'PageUp':
-        event.preventDefault();
-        this.goPrev();
-        break;
-    }
+    this.removeScrollLock = () => {
+      window.removeEventListener('wheel', onWheel);
+    };
   }
 }

@@ -35,8 +35,14 @@
 // ---------------------------------------------------------------------------
 // Viewport shell
 // ---------------------------------------------------------------------------
+.carousel-container {
+    height: 400vh;
+    width: 100%;
+}
+
 .carousel-viewport {
-    position: relative;
+    position: sticky;
+    top: 0;
     width: 100%;
     height: 100vh;
     height: 100dvh; // accounts for mobile browser address-bar chrome
@@ -52,7 +58,6 @@
     width: 100%;
     height: 400vh; // 4 slides
     height: 400dvh;
-    transition: transform var(--transition-speed) var(--transition-ease);
     will-change: transform;
 }
 
@@ -77,12 +82,7 @@
     background-position: center;
     opacity: 0;
     transform: scale(1.06);
-    transition: opacity 1.1s ease, transform 1.4s var(--transition-ease);
-
-    &.in-view {
-        opacity: 1;
-        transform: scale(1);
-    }
+    will-change: opacity, transform;
 }
 
 .bg--juice {
@@ -177,11 +177,7 @@
     text-align: center;
     color: var(--cream);
     opacity: 0;
-    transition: opacity 1s ease 0.3s, transform 1.2s var(--transition-ease) 0.3s;
-
-    &.in-view {
-        opacity: 1;
-    }
+    will-change: opacity, transform;
 }
 
 .eyebrow {
@@ -214,14 +210,6 @@
     top: 12%;
     left: 50%;
     transform: translate(calc(-50% + 100vw), 0);
-
-    &.in-view {
-        transform: translate(-50%, 0);
-    }
-
-    &.past {
-        transform: translate(calc(-50% - 100vw), 0);
-    }
 }
 
 .word-stamp {
@@ -238,14 +226,6 @@
     top: 10%;
     left: 50%;
     transform: translate(calc(-50% + 100vw), 0);
-
-    &.in-view {
-        transform: translate(-50%, 0);
-    }
-
-    &.past {
-        transform: translate(calc(-50% - 100vw), 0);
-    }
 }
 
 .slide-copy--fries,
@@ -254,14 +234,6 @@
     top: 10%;
     left: 50%;
     transform: translate(calc(-50% + 100vw), 0);
-
-    &.in-view {
-        transform: translate(-50%, 0);
-    }
-
-    &.past {
-        transform: translate(calc(-50% - 100vw), 0);
-    }
 }
 
 // Little product card, echoing the "Strawberry Bliss" tag in the reference
@@ -317,10 +289,10 @@
     left: 50%;
     z-index: 5;
     pointer-events: none;
-    transition:
-        transform 1.2s var(--transition-ease) 0.2s,
-        opacity 0.8s ease 0.2s;
+    will-change: transform, opacity;
     filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.45));
+    transform: translate(-50%, 120%) scale(0.82) rotate(4deg);
+    opacity: 0;
 }
 
 .food-photo--juice,
@@ -345,22 +317,6 @@
 
 // Emoji placeholders for the un-photographed slides — sized/positioned the
 // same way so swapping them for <img> tags later is a drop-in change.
-
-// Shared travel states -------------------------------------------------------
-.enter-below,
-.exit-above {
-    transform: translate(-50%, 120%) scale(0.82) rotate(4deg);
-    opacity: 0;
-}
-
-.center {
-    transform: translate(-50%, -50%) scale(1) rotate(0deg);
-    opacity: 1;
-}
-
-.idle {
-    opacity: 0;
-}
 
 // Small continuous drift while a photo is centred, so it never looks static
 .food-photo.center {

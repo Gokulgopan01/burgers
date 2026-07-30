@@ -27,6 +27,9 @@ export class AppComponent implements OnInit, OnDestroy {
         touchMultiplier: 0.1, // acts like smoothTouch: 0.1
       });
 
+      // Expose globally so components can trigger discrete scroll animations
+      (window as any).lenis = this.lenis;
+
       const raf = (time: number) => {
         this.lenis.raf(time);
         this.reqId = requestAnimationFrame(raf);
