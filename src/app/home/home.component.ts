@@ -167,6 +167,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     gsap.set('.slide-copy', { x: '100vw', xPercent: -50, opacity: 0 });
     gsap.set('.slide-copy--juice', { x: 0, xPercent: -50, opacity: 1 }); // first slide active
 
+    gsap.set('.bg-watermark', { x: '100vw', xPercent: -50, yPercent: -50, opacity: 0 });
+    gsap.set('.bg-watermark--juice', { x: 0, xPercent: -50, yPercent: -50, opacity: 1 });
+
     gsap.set('.bg', { opacity: 0, scale: 1.06 });
     gsap.set('.bg--juice', { opacity: 1, scale: 1 });
 
@@ -187,30 +190,36 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     tl.to('.slides-track', { yPercent: -25, ease: 'none', duration: 1 }, 0)
       .to('.bg--juice', { opacity: 0, scale: 1.06, duration: 0.5 }, 0)
       .to('.slide-copy--juice', { opacity: 0, x: '-100vw', duration: 0.5 }, 0)
+      .to('.bg-watermark--juice', { opacity: 0, x: '-100vw', duration: 0.5 }, 0)
       .to('.food-photo--juice', { opacity: 0, y: '-120vh', rotation: -4, scale: 0.82, duration: 0.5 }, 0)
-
+      
       .to('.bg--burger', { opacity: 1, scale: 1, duration: 0.5 }, 0.5)
       .to('.slide-copy--burger', { opacity: 1, x: 0, duration: 0.5 }, 0.5)
+      .to('.bg-watermark--burger', { opacity: 1, x: 0, duration: 0.5 }, 0.5)
       .to('.food-photo--burger', { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.5 }, 0.5);
 
     // Transition 2: Burger -> Fries
     tl.to('.slides-track', { yPercent: -50, ease: 'none', duration: 1 }, 1)
       .to('.bg--burger', { opacity: 0, scale: 1.06, duration: 0.5 }, 1)
       .to('.slide-copy--burger', { opacity: 0, x: '-100vw', duration: 0.5 }, 1)
+      .to('.bg-watermark--burger', { opacity: 0, x: '-100vw', duration: 0.5 }, 1)
       .to('.food-photo--burger', { opacity: 0, y: '-120vh', rotation: -4, scale: 0.82, duration: 0.5 }, 1)
-
+      
       .to('.bg--fries', { opacity: 1, scale: 1, duration: 0.5 }, 1.5)
       .to('.slide-copy--fries', { opacity: 1, x: 0, duration: 0.5 }, 1.5)
+      .to('.bg-watermark--fries', { opacity: 1, x: 0, duration: 0.5 }, 1.5)
       .to('.food-photo--fries', { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.5 }, 1.5);
 
     // Transition 3: Fries -> Dessert
     tl.to('.slides-track', { yPercent: -75, ease: 'none', duration: 1 }, 2)
       .to('.bg--fries', { opacity: 0, scale: 1.06, duration: 0.5 }, 2)
       .to('.slide-copy--fries', { opacity: 0, x: '-100vw', duration: 0.5 }, 2)
+      .to('.bg-watermark--fries', { opacity: 0, x: '-100vw', duration: 0.5 }, 2)
       .to('.food-photo--fries', { opacity: 0, y: '-120vh', rotation: -4, scale: 0.82, duration: 0.5 }, 2)
-
+      
       .to('.bg--dessert', { opacity: 1, scale: 1, duration: 0.5 }, 2.5)
       .to('.slide-copy--dessert', { opacity: 1, x: 0, duration: 0.5 }, 2.5)
+      .to('.bg-watermark--dessert', { opacity: 1, x: 0, duration: 0.5 }, 2.5)
       .to('.food-photo--dessert', { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.5 }, 2.5);
 
     this.scrollTriggerInstance = tl.scrollTrigger;
