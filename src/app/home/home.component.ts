@@ -123,11 +123,29 @@ export class HomeComponent
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Give the carousel keyboard focus so arrow keys work immediately
-    this.host.nativeElement.querySelector('.carousel-viewport')?.setAttribute('tabindex', '0');
+    const viewport = this.host.nativeElement.querySelector('.carousel-viewport') as HTMLElement | null;
+    if (viewport) {
+      viewport.setAttribute('tabindex', '0');
+
+      // Attach non-passive wheel and touchmove listeners to ensure preventDefault() works
+      // and stops Lenis from scrolling the page during carousel transitions.
+      viewport.addEventListener('wheel', this.onWheelNative as EventListener, { passive: false });
+      viewport.addEventListener('touchmove', this.onTouchMoveNative as EventListener, { passive: false });
+      viewport.addEventListener('touchstart', this.onTouchStartNative as EventListener, { passive: false });
+      viewport.addEventListener('touchend', this.onTouchEndNative as EventListener, { passive: false });
+    }
   }
 
   ngOnDestroy(): void {
     this.removeWheelListener?.();
+
+    const viewport = this.host.nativeElement.querySelector('.carousel-viewport') as HTMLElement | null;
+    if (viewport) {
+      viewport.removeEventListener('wheel', this.onWheelNative as EventListener);
+      viewport.removeEventListener('touchmove', this.onTouchMoveNative as EventListener);
+      viewport.removeEventListener('touchstart', this.onTouchStartNative as EventListener);
+      viewport.removeEventListener('touchend', this.onTouchEndNative as EventListener);
+    }
 
     this.io?.disconnect();
 
@@ -276,8 +294,8 @@ export class HomeComponent
   // ---------------------------------------------------------------------
   // Input handlers — mouse wheel, touch swipe, keyboard
   // ---------------------------------------------------------------------
-  @HostListener('wheel', ['$event'])
-  onWheel(event: WheelEvent): void {
+
+  onWheelNative = (event: WheelEvent): void => {
     // If the page is scrolled down past the top, allow native scrolling
     if (window.scrollY > 0) {
       return;
@@ -294,6 +312,7 @@ export class HomeComponent
       // so we don't accidentally skip past it in one scroll motion.
       if (this.isAnimating) {
         event.preventDefault();
+        event.stopPropagation();
         return;
       }
       return; // allow native page scroll
@@ -301,6 +320,7 @@ export class HomeComponent
 
     // Otherwise, we are inside the carousel navigating between slides
     event.preventDefault();
+    event.stopPropagation(); // Prevent Lenis from picking up the event
 
     if (this.isAnimating) return;
     if (Math.abs(event.deltaY) < this.wheelThreshold) return;
@@ -312,13 +332,11 @@ export class HomeComponent
     }
   }
 
-  @HostListener('touchstart', ['$event'])
-  onTouchStart(event: TouchEvent): void {
+  onTouchStartNative = (event: TouchEvent): void => {
     this.touchStartY = event.touches[0].clientY;
   }
 
-  @HostListener('touchmove', ['$event'])
-  onTouchMove(event: TouchEvent): void {
+  onTouchMoveNative = (event: TouchEvent): void => {
     // If the page is scrolled down past the top, allow native scrolling
     if (window.scrollY > 0) {
       return;
@@ -334,6 +352,7 @@ export class HomeComponent
     if (this.activeIndex === this.totalSlides - 1 && deltaY > 0) {
       if (this.isAnimating) {
         event.preventDefault();
+        event.stopPropagation();
         return;
       }
       return;
@@ -341,10 +360,10 @@ export class HomeComponent
 
     // Prevent native scroll while navigating inside the carousel
     event.preventDefault();
+    event.stopPropagation();
   }
 
-  @HostListener('touchend', ['$event'])
-  onTouchEnd(event: TouchEvent): void {
+  onTouchEndNative = (event: TouchEvent): void => {
     // Only process if we didn't natively scroll
     if (window.scrollY > 0) return;
 
