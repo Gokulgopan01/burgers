@@ -1559,6 +1559,10 @@
     height: 100vh;
     height: 100dvh;
     background-color: #FFF8F1;
+    background-image: url("/assets/ingredients/background.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     overflow: hidden;
     display: flex;
     align-items: center;
