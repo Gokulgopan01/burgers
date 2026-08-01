@@ -302,3 +302,43 @@
         </div>
     </div>
 </section>
+
+<!-- ================= COOKING PROCESS SECTION ================= -->
+<section class="cooking-process" #cookingProcess>
+    <div class="cooking-process__bg" #cookingBg></div>
+
+    <div class="cooking-process__stage">
+        <!-- Floating spice particles for cinematic depth -->
+        <div class="spice-particles">
+            <div class="spice spice-1"></div>
+            <div class="spice spice-2"></div>
+            <div class="spice spice-3"></div>
+            <div class="spice spice-4"></div>
+            <div class="spice spice-5"></div>
+            <div class="spice spice-6"></div>
+        </div>
+
+        <!-- Sequential Cooking Steps -->
+        <img class="cooking-step cooking-step--tortilla" #stepTortilla src="/assets/ingredients/wrap.png"
+            alt="Fresh Tortilla" />
+        <img class="cooking-step cooking-step--chicken" #stepChicken src="/assets/ingredients/chicken.png"
+            alt="Grilled Chicken" />
+        <img class="cooking-step cooking-step--cheese" #stepCheese src="/assets/ingredients/cheese.png"
+            alt="Melted Cheese" />
+
+        <!-- Splitting veggies to allow stagger animation -->
+        <img class="cooking-step cooking-step--veggies veggies-part" #stepVeggies1 src="/assets/ingredients/lettuce.png"
+            alt="Fresh Vegetables" />
+        <img class="cooking-step cooking-step--veggies veggies-part" #stepVeggies2 src="/assets/ingredients/lettuce.png"
+            alt="Fresh Vegetables" />
+        <img class="cooking-step cooking-step--veggies veggies-part" #stepVeggies3 src="/assets/ingredients/lettuce.png"
+            alt="Fresh Vegetables" />
+
+        <img class="cooking-step cooking-step--sauce" #stepSauce src="/assets/ingredients/sauce.png"
+            alt="Signature Sauce" />
+
+        <!-- Final Wrapped Product -->
+        <img class="cooking-step cooking-step--final" #stepFinal src="/assets/ingredients/shawarma.png"
+            alt="Perfect Wrapped Shawarma" />
+    </div>
+</section>

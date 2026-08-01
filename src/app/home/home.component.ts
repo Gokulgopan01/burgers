@@ -111,11 +111,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('shawarmaGlow', { static: false }) shawarmaGlow?: ElementRef<HTMLElement>;
   @ViewChild('shawarmaSteam', { static: false }) shawarmaSteam?: ElementRef<HTMLElement>;
 
+  // Cooking Process ViewChildren
+  @ViewChild('cookingProcess', { static: false }) cookingProcess?: ElementRef<HTMLElement>;
+  @ViewChild('cookingBg', { static: false }) cookingBg?: ElementRef<HTMLElement>;
+  @ViewChild('stepTortilla', { static: false }) stepTortilla?: ElementRef<HTMLElement>;
+  @ViewChild('stepChicken', { static: false }) stepChicken?: ElementRef<HTMLElement>;
+  @ViewChild('stepCheese', { static: false }) stepCheese?: ElementRef<HTMLElement>;
+  @ViewChild('stepSauce', { static: false }) stepSauce?: ElementRef<HTMLElement>;
+  @ViewChild('stepFinal', { static: false }) stepFinal?: ElementRef<HTMLElement>;
+
   isVisible = false;
 
   private io?: IntersectionObserver;
   private scrollTriggerInstance?: ScrollTrigger;
   private ingredientTriggerInstance?: ScrollTrigger;
+  private cookingTriggerInstance?: ScrollTrigger;
   private removeScrollLock?: () => void;
 
   ngOnInit(): void {
@@ -134,6 +144,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.ingredientTriggerInstance) {
       this.ingredientTriggerInstance.kill();
     }
+    if (this.cookingTriggerInstance) {
+      this.cookingTriggerInstance.kill();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -150,6 +163,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       // Setup Ingredient Journey in a setTimeout to ensure DOM is fully rendered
       setTimeout(() => {
         this.setupIngredientJourney();
+        this.setupCookingProcess();
       }, 50);
     }
   }
@@ -318,6 +332,97 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 3.5);
 
     this.ingredientTriggerInstance = tl.scrollTrigger;
+  }
+
+  private setupCookingProcess(): void {
+    if (!this.cookingProcess || !this.stepTortilla || !this.stepChicken || !this.stepCheese || !this.stepSauce || !this.stepFinal) {
+      return;
+    }
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: this.cookingProcess.nativeElement,
+        start: 'top top',
+        end: '+=400%', // 4 screens to scroll through for the whole process
+        scrub: 1.2,
+        pin: true,
+        anticipatePin: 1
+      }
+    });
+
+    // 0. Slowly change background color over the entire scroll
+    tl.to(this.cookingProcess.nativeElement, {
+      backgroundColor: '#E8A341', // Rich amber color
+      ease: 'none',
+      duration: 10 // Spans across all steps
+    }, 0);
+
+    // 1. Tortilla slides in
+    tl.fromTo(this.stepTortilla.nativeElement,
+      { opacity: 0, y: '100vh', xPercent: -50, yPercent: -50 },
+      { opacity: 1, y: '0%', duration: 1.5, ease: 'power2.out' },
+      0
+    );
+
+    // 2. Chicken drops
+    tl.fromTo(this.stepChicken.nativeElement,
+      { opacity: 0, y: '-100vh', xPercent: -50, yPercent: -50 },
+      { opacity: 1, y: '0%', duration: 1.5, ease: 'bounce.out' },
+      1.5
+    );
+
+    // 3. Cheese melts
+    tl.fromTo(this.stepCheese.nativeElement,
+      { opacity: 0, y: '-50vh', scaleY: 1, xPercent: -50, yPercent: -50 },
+      { opacity: 1, y: '0%', duration: 1 },
+      3
+    )
+    .to(this.stepCheese.nativeElement, {
+      scaleY: 0.8, // Melts and flattens slightly
+      y: '5%',
+      duration: 1,
+      ease: 'power1.inOut'
+    }, 4);
+
+    // 4. Veggies fall with stagger
+    const veggies = this.cookingProcess.nativeElement.querySelectorAll('.veggies-part');
+    tl.fromTo(veggies,
+      { opacity: 0, y: '-80vh', rotation: () => gsap.utils.random(-45, 45), xPercent: -50, yPercent: -50 },
+      { opacity: 1, y: '0%', rotation: 0, duration: 1.2, stagger: 0.3, ease: 'power2.out' },
+      5
+    );
+
+    // 5. Sauce pours
+    tl.fromTo(this.stepSauce.nativeElement,
+      { opacity: 0, y: '-100vh', scaleY: 2, transformOrigin: 'top center', xPercent: -50, yPercent: -50 },
+      { opacity: 1, y: '0%', scaleY: 1, duration: 1.5, ease: 'power3.out' },
+      7
+    );
+
+    // 6. Wrap it up! Squeeze loose ingredients to simulate folding
+    const allLooseIngredients = [
+      this.stepTortilla.nativeElement,
+      this.stepChicken.nativeElement,
+      this.stepCheese.nativeElement,
+      ...Array.from(veggies),
+      this.stepSauce.nativeElement
+    ];
+
+    tl.to(allLooseIngredients, {
+      scaleX: 0.3,
+      opacity: 0,
+      duration: 1.5,
+      ease: 'power3.inOut'
+    }, 9);
+
+    // 7. Reveal final shawarma
+    tl.fromTo(this.stepFinal.nativeElement,
+      { opacity: 0, scale: 0.5, rotation: -15, xPercent: -50, yPercent: -50 },
+      { opacity: 1, scale: 1, rotation: 0, duration: 1.5, ease: 'back.out(1.4)' },
+      10
+    );
+
+    this.cookingTriggerInstance = tl.scrollTrigger;
   }
 
   private setupScrollLock(): void {
