@@ -13,6 +13,8 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+// @ts-ignore
+import SplitType from 'split-type';
 
 /**
  * States used to drive the "travelling food photo" effct.
@@ -100,10 +102,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('carouselContainer', { static: true })
   carouselContainer!: ElementRef<HTMLElement>;
 
+  // Ingredient Journey ViewChildren
+  @ViewChild('ingredientJourney', { static: false }) ingredientJourney?: ElementRef<HTMLElement>;
+  @ViewChild('ingredientHeading', { static: false }) ingredientHeading?: ElementRef<HTMLElement>;
+  @ViewChild('ingredientDesc', { static: false }) ingredientDesc?: ElementRef<HTMLElement>;
+  @ViewChild('ingredientRight', { static: false }) ingredientRight?: ElementRef<HTMLElement>;
+  @ViewChild('finalShawarma', { static: false }) finalShawarma?: ElementRef<HTMLElement>;
+  @ViewChild('shawarmaGlow', { static: false }) shawarmaGlow?: ElementRef<HTMLElement>;
+  @ViewChild('shawarmaSteam', { static: false }) shawarmaSteam?: ElementRef<HTMLElement>;
+
   isVisible = false;
 
   private io?: IntersectionObserver;
   private scrollTriggerInstance?: ScrollTrigger;
+  private ingredientTriggerInstance?: ScrollTrigger;
   private removeScrollLock?: () => void;
 
   ngOnInit(): void {
@@ -119,6 +131,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.scrollTriggerInstance) {
       this.scrollTriggerInstance.kill();
     }
+    if (this.ingredientTriggerInstance) {
+      this.ingredientTriggerInstance.kill();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -132,6 +147,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isPlatformBrowser(this.platformId)) {
       this.setupScrollTrigger();
       this.setupScrollLock();
+      // Setup Ingredient Journey in a setTimeout to ensure DOM is fully rendered
+      setTimeout(() => {
+        this.setupIngredientJourney();
+      }, 50);
     }
   }
 
@@ -223,6 +242,82 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       .to('.food-photo--dessert', { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.5 }, 2.5);
 
     this.scrollTriggerInstance = tl.scrollTrigger;
+  }
+
+  private setupIngredientJourney(): void {
+    if (!this.ingredientJourney || !this.ingredientHeading || !this.ingredientDesc || !this.ingredientRight || !this.finalShawarma || !this.shawarmaGlow || !this.shawarmaSteam) {
+      return;
+    }
+
+    // Initialize SplitType for character-by-character animation
+    const splitText = new SplitType(this.ingredientHeading.nativeElement, { types: 'lines,words,chars' });
+    
+    // Initial states
+    gsap.set(splitText.chars, { y: '110%' });
+    gsap.set(this.ingredientDesc.nativeElement, { opacity: 0, y: 20 });
+    gsap.set(this.finalShawarma.nativeElement, { opacity: 0, scale: 0.7 });
+    gsap.set(this.shawarmaGlow.nativeElement, { opacity: 0 });
+    gsap.set(this.shawarmaSteam.nativeElement, { opacity: 0 });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: this.ingredientJourney.nativeElement,
+        start: 'top top',
+        end: '+=200%', // Provides 200vh of scroll distance for the animation
+        scrub: 1.2,
+        pin: true,
+        anticipatePin: 1
+      }
+    });
+
+    // 1. Text Reveal Animation
+    tl.to(splitText.chars, {
+      y: '0%',
+      duration: 1.5,
+      stagger: 0.04,
+      ease: 'power3.out'
+    }, 0)
+    .to(this.ingredientDesc.nativeElement, {
+      opacity: 1,
+      y: 0,
+      duration: 1.2,
+      ease: 'power2.out'
+    }, 0.5);
+
+    // 2. Flying Ingredients Parallax Assembly
+    const ingredients = this.ingredientRight.nativeElement.querySelectorAll('.ingredient');
+    
+    // We animate all ingredients converging into the center
+    tl.to(ingredients, {
+      left: '50%',
+      top: '50%',
+      xPercent: -50,
+      yPercent: -50,
+      rotation: (i) => (i % 2 === 0 ? 180 : -180),
+      scale: 0.5,
+      opacity: 0,
+      duration: 2.5,
+      stagger: 0.15,
+      ease: 'power3.inOut'
+    }, 1);
+
+    // 3. Reveal Assembled Product + Special Effects
+    tl.to(this.finalShawarma.nativeElement, {
+      opacity: 1,
+      scale: 1,
+      duration: 1.5,
+      ease: 'back.out(1.5)'
+    }, 3)
+    .to(this.shawarmaGlow.nativeElement, {
+      opacity: 1,
+      duration: 1
+    }, 3.5)
+    .to(this.shawarmaSteam.nativeElement, {
+      opacity: 1,
+      duration: 1
+    }, 3.5);
+
+    this.ingredientTriggerInstance = tl.scrollTrigger;
   }
 
   private setupScrollLock(): void {

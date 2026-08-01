@@ -257,3 +257,48 @@
         </footer>
     </div>
 </section>
+
+<!-- ================= INGREDIENT JOURNEY SECTION ================= -->
+<section class="ingredient-journey" #ingredientJourney>
+    <div class="ingredient-journey__bg">
+        <div class="ingredient-journey__watermark" aria-hidden="true">INGREDIENTS</div>
+    </div>
+
+    <div class="ingredient-journey__content">
+        <!-- Left Side: Editorial -->
+        <div class="ingredient-journey__left">
+            <h2 class="ingredient-journey__heading" #ingredientHeading>
+                FROM<br>FRESH<br>INGREDIENTS<br>TO<br>PERFECTION
+            </h2>
+            <p class="ingredient-journey__desc" #ingredientDesc>
+                Every bite starts with the finest, farm-fresh ingredients.
+                Carefully crafted, layered with bold, uncompromising flavours,
+                and rolled into an unforgettable culinary experience.
+            </p>
+        </div>
+
+        <!-- Right Side: Flying Ingredients -->
+        <div class="ingredient-journey__right" #ingredientRight>
+            <!-- Scattered Ingredients -->
+            <img class="ingredient ingredient--wrap" src="/assets/ingredients/wrap.png" alt="Tortilla Wrap" />
+            <img class="ingredient ingredient--lettuce" src="/assets/ingredients/lettuce.png" alt="Crunchy Lettuce" />
+            <img class="ingredient ingredient--onion" src="/assets/ingredients/onion.png" alt="Crisp Onion" />
+            <img class="ingredient ingredient--tomato" src="/assets/ingredients/tomato.png" alt="Fresh Tomato" />
+            <img class="ingredient ingredient--chicken" src="/assets/ingredients/chicken.png" alt="Grilled Chicken" />
+            <img class="ingredient ingredient--cheese" src="/assets/ingredients/cheese.png" alt="Melted Cheese" />
+            <img class="ingredient ingredient--sauce" src="/assets/ingredients/sauce.png" alt="Signature Sauce" />
+
+            <!-- Final Assembled Shawarma -->
+            <div class="final-shawarma" #finalShawarma>
+                <div class="final-shawarma__glow" #shawarmaGlow></div>
+                <img class="final-shawarma__img" src="/assets/ingredients/shawarma.png" alt="Assembled Shawarma" />
+                <!-- Steam Particles -->
+                <div class="final-shawarma__steam" #shawarmaSteam>
+                    <span class="steam-particle"></span>
+                    <span class="steam-particle"></span>
+                    <span class="steam-particle"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

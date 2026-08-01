@@ -1548,3 +1548,318 @@
         transform: none !important;
     }
 }
+
+/*=====================================================
+            INGREDIENT JOURNEY SECTION
+======================================================*/
+
+.ingredient-journey {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    background-color: #FFF8F1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // Soft grain texture overlay
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        opacity: 0.4;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    &__bg {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__watermark {
+        font-family: var(--font-display);
+        font-size: min(25vw, 400px);
+        color: rgba(0, 0, 0, 0.02);
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+        user-select: none;
+    }
+
+    &__content {
+        position: relative;
+        z-index: 2;
+        width: 90%;
+        max-width: 1400px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        @media (max-width: 900px) {
+            flex-direction: column;
+            justify-content: center;
+            gap: 2rem;
+        }
+    }
+
+    &__left {
+        flex: 1;
+        max-width: 500px;
+        padding-right: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        @media (max-width: 900px) {
+            text-align: center;
+            padding-right: 0;
+            padding-top: 10vh;
+            justify-content: flex-end;
+            margin-bottom: 2rem;
+        }
+    }
+
+    &__heading {
+        font-family: var(--font-display);
+        font-size: clamp(2.5rem, 5vw, 5rem);
+        line-height: 1.1;
+        color: #2F1506;
+        margin: 0 0 1.5rem 0;
+        text-transform: uppercase;
+        
+        @media (max-width: 900px) {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        // Setup for SplitType
+        .line {
+            overflow: hidden;
+        }
+
+        .char {
+            display: inline-block;
+            transform: translateY(110%);
+        }
+    }
+
+    &__desc {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #5C473A;
+        opacity: 0; // Hidden initially for GSAP
+        transform: translateY(20px);
+
+        @media (max-width: 900px) {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+    }
+
+    &__right {
+        flex: 1;
+        position: relative;
+        height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        @media (max-width: 900px) {
+            height: 50vh;
+            width: 100%;
+            margin-bottom: 10vh;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Floating Ingredients
+// ---------------------------------------------------------------------------
+.ingredient {
+    position: absolute;
+    will-change: transform, opacity;
+    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
+    animation: gentle-float 6s ease-in-out infinite;
+
+    &--wrap {
+        width: clamp(200px, 20vw, 350px);
+        right: 5%;
+        top: 10%;
+        animation-delay: -1s;
+    }
+
+    &--lettuce {
+        width: clamp(100px, 12vw, 180px);
+        left: 5%;
+        top: 20%;
+        animation-delay: -2.5s;
+    }
+
+    &--onion {
+        width: clamp(70px, 8vw, 120px);
+        right: 25%;
+        bottom: 15%;
+        animation-delay: -0.5s;
+    }
+
+    &--tomato {
+        width: clamp(90px, 10vw, 150px);
+        left: 15%;
+        bottom: 25%;
+        animation-delay: -3s;
+    }
+
+    &--chicken {
+        width: clamp(120px, 14vw, 200px);
+        right: 15%;
+        top: 35%;
+        animation-delay: -1.5s;
+    }
+
+    &--cheese {
+        width: clamp(90px, 12vw, 160px);
+        left: 25%;
+        top: 15%;
+        animation-delay: -4s;
+    }
+
+    &--sauce {
+        width: clamp(60px, 7vw, 100px);
+        left: 45%;
+        bottom: 10%;
+        animation-delay: -2s;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Final Assembled Shawarma
+// ---------------------------------------------------------------------------
+.final-shawarma {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &__img {
+        width: min(80vw, 500px);
+        position: relative;
+        z-index: 2;
+        filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.3));
+    }
+
+    &__glow {
+        position: absolute;
+        width: 150%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(244, 183, 64, 0.3) 0%, rgba(244, 183, 64, 0) 70%);
+        z-index: 1;
+        opacity: 0;
+        border-radius: 50%;
+        animation: pulse-glow 4s ease-in-out infinite;
+    }
+
+    &__steam {
+        position: absolute;
+        top: -20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 200px;
+        z-index: 3;
+        opacity: 0; // Starts hidden
+    }
+}
+
+.steam-particle {
+    position: absolute;
+    bottom: 0;
+    width: 20px;
+    height: 20px;
+    background: #FFF;
+    border-radius: 50%;
+    filter: blur(15px);
+    opacity: 0;
+    animation: rise-steam 4s infinite linear;
+
+    &:nth-child(1) {
+        left: 20%;
+        animation-delay: 0s;
+    }
+
+    &:nth-child(2) {
+        left: 50%;
+        animation-delay: 1.3s;
+        width: 30px;
+        height: 30px;
+    }
+
+    &:nth-child(3) {
+        left: 80%;
+        animation-delay: 2.6s;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Keyframes
+// ---------------------------------------------------------------------------
+@keyframes gentle-float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-15px) rotate(2deg);
+    }
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+@keyframes rise-steam {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 0.4;
+    }
+
+    80% {
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(-150px) scale(3);
+        opacity: 0;
+    }
+}
