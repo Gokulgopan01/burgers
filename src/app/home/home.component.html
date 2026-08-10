@@ -265,65 +265,147 @@
         <div class="ingredient-journey__watermark" aria-hidden="true">INGREDIENTS</div>
     </div>
 
-    <div class="ingredient-journey__content">
+    <!-- Intro copy: fades out once the shawarma is fully assembled -->
+    <div class="ingredient-journey__intro" #ingredientIntro>
 
-        <!-- Left Side: Editorial -->
-        <div class="ingredient-journey__left">
-
-            <div class="ingredient-journey__eyebrow" #ingredientEyebrow>
-                <svg class="ingredient-journey__eyebrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M20 4c-8 0-15 5-15 13 0 1.2.15 2.3.4 3.3C13 19.5 17.5 13 20 4Z" fill="currentColor" />
-                    <path d="M5.5 20.5C9 15 14 10 20 4" stroke="#FFF8F1" stroke-width="1.2" stroke-linecap="round" />
-                </svg>
-                <span>Premium Ingredients</span>
-            </div>
-
-            <h2 class="ingredient-journey__heading" #ingredientHeading>
-                <span class="line">From Fresh</span>
-                <span class="line line--accent">Ingredients</span>
-                <span class="line">To Perfection</span>
-            </h2>
-
-            <p class="ingredient-journey__desc" #ingredientDesc>
-                Every bite starts with the finest, farm-fresh ingredients.
-                Carefully crafted, layered with bold, uncompromising flavours,
-                and rolled into an unforgettable culinary experience.
-            </p>
-
-            <a class="ingredient-journey__cta" routerLink="/menu" #ingredientCta>
-                <span>Explore Our Menu</span>
-                <svg class="ingredient-journey__cta-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-            </a>
-
+        <div class="ingredient-journey__eyebrow" #ingredientEyebrow>
+            <svg class="ingredient-journey__eyebrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M20 4c-8 0-15 5-15 13 0 1.2.15 2.3.4 3.3C13 19.5 17.5 13 20 4Z" fill="currentColor" />
+                <path d="M5.5 20.5C9 15 14 10 20 4" stroke="#FFF8F1" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
+            <span>Premium Ingredients</span>
         </div>
 
-        <!-- Right Side: Flying Ingredients -->
-        <div class="ingredient-journey__right" #ingredientRight>
+        <h2 class="ingredient-journey__heading" #ingredientHeading>
+            <span class="line">From Fresh</span>
+            <span class="line line--accent">Ingredients</span>
+            <span class="line">To Perfection</span>
+        </h2>
 
-            <!-- Scattered Ingredients -->
-            <img class="ingredient ingredient--lettuce" src="/assets/ingredients/lettuce.png" alt="Crunchy Lettuce" />
-            <img class="ingredient ingredient--cheese" src="/assets/ingredients/cheese.png" alt="Melted Cheese" />
-            <img class="ingredient ingredient--wrap" src="/assets/ingredients/wrap.png" alt="Tortilla Wrap" />
-            <img class="ingredient ingredient--tomato" src="/assets/ingredients/tomato.png" alt="Fresh Tomato" />
-            <img class="ingredient ingredient--onion" src="/assets/ingredients/onion.png" alt="Crisp Onion" />
-            <img class="ingredient ingredient--chicken" src="/assets/ingredients/chicken.png" alt="Grilled Chicken" />
-            <img class="ingredient ingredient--sauce" src="/assets/ingredients/sauce.png" alt="Signature Sauce" />
+        <p class="ingredient-journey__desc" #ingredientDesc>
+            Every bite starts with the finest, farm-fresh ingredients.
+            Carefully crafted, layered with bold, uncompromising flavours,
+            and rolled into an unforgettable culinary experience.
+        </p>
 
-            <!-- Final Assembled Shawarma -->
-            <div class="final-shawarma" #finalShawarma>
-                <div class="final-shawarma__glow" #shawarmaGlow></div>
-                <img class="final-shawarma__img" src="/assets/ingredients/shawarma.webp" alt="Assembled Shawarma" />
-                <!-- Steam Particles -->
-                <div class="final-shawarma__steam" #shawarmaSteam>
-                    <span class="steam-particle"></span>
-                    <span class="steam-particle"></span>
-                    <span class="steam-particle"></span>
+        <a class="ingredient-journey__cta" routerLink="/menu" #ingredientCta>
+            <span>Explore Our Menu</span>
+            <svg class="ingredient-journey__cta-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </a>
+
+    </div>
+
+    <!-- Stage: scattered ingredients that converge into the shawarma -->
+    <div class="ingredient-journey__stage" #ingredientStage>
+
+        <img class="ingredient ingredient--lettuce" src="/assets/ingredients/lettuce.png" alt="Crunchy Lettuce" />
+        <img class="ingredient ingredient--cheese" src="/assets/ingredients/cheese.png" alt="Melted Cheese" />
+        <img class="ingredient ingredient--wrap" src="/assets/ingredients/wrap.png" alt="Tortilla Wrap" />
+        <img class="ingredient ingredient--tomato" src="/assets/ingredients/tomato.png" alt="Fresh Tomato" />
+        <img class="ingredient ingredient--onion" src="/assets/ingredients/onion.png" alt="Crisp Onion" />
+        <img class="ingredient ingredient--chicken" src="/assets/ingredients/chicken.png" alt="Grilled Chicken" />
+        <img class="ingredient ingredient--sauce" src="/assets/ingredients/sauce.png" alt="Signature Sauce" />
+
+        <div class="final-shawarma" #finalShawarma>
+            <div class="final-shawarma__glow" #shawarmaGlow></div>
+            <img class="final-shawarma__img" src="/assets/ingredients/shawarma.webp" alt="Assembled Shawarma" />
+            <div class="final-shawarma__steam" #shawarmaSteam>
+                <span class="steam-particle"></span>
+                <span class="steam-particle"></span>
+                <span class="steam-particle"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Showcase: replaces the intro once the shawarma has assembled -->
+    <div class="ingredient-journey__showcase" #ingredientShowcase>
+
+        <svg class="showcase__lines" viewBox="0 0 1400 620" preserveAspectRatio="none" aria-hidden="true">
+            <path class="showcase__line" d="M330,90 C450,110 520,140 640,190" />
+            <path class="showcase__line" d="M300,310 C420,300 520,300 640,300" />
+            <path class="showcase__line" d="M320,520 C440,480 520,440 640,380" />
+            <path class="showcase__line" d="M1070,90 C950,110 880,140 760,190" />
+            <path class="showcase__line" d="M1100,310 C980,300 880,300 760,300" />
+            <path class="showcase__line" d="M1080,520 C960,480 880,440 760,380" />
+        </svg>
+
+        <div class="showcase__col showcase__col--left">
+            <div class="showcase__item">
+                <span class="showcase__icon showcase__icon--leaf" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M20 4c-8 0-15 5-15 13 0 1.2.15 2.3.4 3.3C13 19.5 17.5 13 20 4Z" fill="currentColor" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Fresh &amp; Crisp</h3>
+                    <p>Hand-picked vegetables for the perfect crunch.</p>
                 </div>
             </div>
+            <div class="showcase__item">
+                <span class="showcase__icon showcase__icon--tomato" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="13" r="8" fill="currentColor" />
+                        <path d="M9 6c1-2 5-2 6 0" stroke="#fff" stroke-width="1.4" stroke-linecap="round" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Juicy &amp; Flavorful</h3>
+                    <p>Ripe tomatoes and onions add a burst of freshness.</p>
+                </div>
+            </div>
+            <div class="showcase__item">
+                <span class="showcase__icon showcase__icon--onion" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="8" fill="currentColor" />
+                        <circle cx="12" cy="12" r="4" fill="#fff" opacity="0.5" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Bold &amp; Zesty</h3>
+                    <p>Signature sauces for that irresistible kick.</p>
+                </div>
+            </div>
+        </div>
 
+        <div class="showcase__col showcase__col--right">
+            <div class="showcase__item showcase__item--reverse">
+                <span class="showcase__icon showcase__icon--cheese" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M3 17h18l-9-11-9 11Z" fill="currentColor" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Rich &amp; Creamy</h3>
+                    <p>Premium cheese for a smooth, delicious bite.</p>
+                </div>
+            </div>
+            <div class="showcase__item showcase__item--reverse">
+                <span class="showcase__icon showcase__icon--chicken" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M8 21c-3-1-5-4-4-7 1-3 4-4 6-2 1-3 5-4 7-1 2 3 0 7-3 8-1 2-4 3-6 2Z"
+                            fill="currentColor" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Perfectly Seasoned</h3>
+                    <p>Marinated to perfection and grilled to perfection.</p>
+                </div>
+            </div>
+            <div class="showcase__item showcase__item--reverse">
+                <span class="showcase__icon showcase__icon--wrap" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <rect x="4" y="9" width="16" height="6" rx="3" fill="currentColor" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Made to Perfection</h3>
+                    <p>All wrapped up in warm, soft bread for the ultimate experience.</p>
+                </div>
+            </div>
         </div>
 
     </div>

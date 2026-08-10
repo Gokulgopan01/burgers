@@ -104,14 +104,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Ingredient Journey ViewChildren
   @ViewChild('ingredientJourney', { static: false }) ingredientJourney?: ElementRef<HTMLElement>;
+  @ViewChild('ingredientIntro', { static: false }) ingredientIntro?: ElementRef<HTMLElement>;
   @ViewChild('ingredientEyebrow', { static: false }) ingredientEyebrow?: ElementRef<HTMLElement>;
   @ViewChild('ingredientHeading', { static: false }) ingredientHeading?: ElementRef<HTMLElement>;
   @ViewChild('ingredientDesc', { static: false }) ingredientDesc?: ElementRef<HTMLElement>;
   @ViewChild('ingredientCta', { static: false }) ingredientCta?: ElementRef<HTMLElement>;
-  @ViewChild('ingredientRight', { static: false }) ingredientRight?: ElementRef<HTMLElement>;
+  @ViewChild('ingredientStage', { static: false }) ingredientStage?: ElementRef<HTMLElement>;
   @ViewChild('finalShawarma', { static: false }) finalShawarma?: ElementRef<HTMLElement>;
   @ViewChild('shawarmaGlow', { static: false }) shawarmaGlow?: ElementRef<HTMLElement>;
   @ViewChild('shawarmaSteam', { static: false }) shawarmaSteam?: ElementRef<HTMLElement>;
+  @ViewChild('ingredientShowcase', { static: false }) ingredientShowcase?: ElementRef<HTMLElement>;
 
   // Cooking Process ViewChildren
   @ViewChild('cookingProcess', { static: false }) cookingProcess?: ElementRef<HTMLElement>;
@@ -265,28 +267,38 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Ingredient Journey:
-   *  - Page-load-style entrance (eyebrow, heading, copy, CTA, scattered ingredients)
-   *    plays once when the section first enters the viewport.
-   *  - A pinned, scroll-scrubbed timeline then converges the scattered
-   *    ingredients into the final assembled shawarma with a glow + steam payoff.
+   * Ingredient Journey — three phases:
+   *  1. Entrance: eyebrow/heading/copy/CTA and scattered ingredients fade & pop in
+   *     once the section first enters the viewport (plays once).
+   *  2. Convergence: pinned + scroll-scrubbed. Ingredients spiral into the center
+   *     and assemble into the shawarma, with a glow + steam payoff.
+   *  3. Showcase: once assembled, the intro copy fades away and the shawarma is
+   *     surrounded by icon-labeled callouts (Fresh & Crisp, Rich & Creamy, etc.)
+   *     with dashed connector lines drawing in.
    */
   private setupIngredientJourney(): void {
     if (
       !this.ingredientJourney ||
+      !this.ingredientIntro ||
       !this.ingredientHeading ||
       !this.ingredientDesc ||
-      !this.ingredientRight ||
+      !this.ingredientStage ||
       !this.finalShawarma ||
       !this.shawarmaGlow ||
-      !this.shawarmaSteam
+      !this.shawarmaSteam ||
+      !this.ingredientShowcase
     ) {
       return;
     }
 
     const sectionEl = this.ingredientJourney.nativeElement;
-    const ingredients = this.ingredientRight.nativeElement.querySelectorAll<HTMLElement>('.ingredient');
+    const stageEl = this.ingredientStage.nativeElement;
+    const showcaseEl = this.ingredientShowcase.nativeElement;
+
+    const ingredients = stageEl.querySelectorAll<HTMLElement>('.ingredient');
     const lineEls = this.ingredientHeading.nativeElement.querySelectorAll<HTMLElement>('.line');
+    const showcaseItems = showcaseEl.querySelectorAll<HTMLElement>('.showcase__item');
+    const showcaseLines = showcaseEl.querySelectorAll<SVGPathElement>('.showcase__line');
 
     // Split each heading line independently so "line--accent" keeps its color
     // while every character still gets its own reveal animation.
@@ -294,6 +306,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       (line) => new SplitType(line, { types: 'words,chars' })
     );
     const allChars = splitLines.flatMap((s) => s.chars ?? []);
+
+    // Prep each dashed connector line so it can "draw" itself in later.
+    const lineLengths = Array.from(showcaseLines).map((path) => {
+      const length = path.getTotalLength();
+      path.style.strokeDasharray = `${length}`;
+      path.style.strokeDashoffset = `${length}`;
+      return length;
+    });
 
     // ---- Initial (hidden) states ----
     gsap.set(allChars, { y: '110%' });
@@ -308,6 +328,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     gsap.set(this.finalShawarma.nativeElement, { opacity: 0, scale: 0.7 });
     gsap.set(this.shawarmaGlow.nativeElement, { opacity: 0 });
     gsap.set(this.shawarmaSteam.nativeElement, { opacity: 0 });
+    gsap.set(showcaseEl, { opacity: 0 });
+    gsap.set(showcaseItems, { opacity: 0, y: 16 });
 
     // ---- Entrance: plays once as the section first comes into view ----
     const entranceTl = gsap.timeline({
@@ -361,19 +383,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.ingredientEntranceTriggerInstance = entranceTl.scrollTrigger;
 
-    // ---- Scroll-scrubbed convergence: ingredients fly together -> shawarma ----
+    // ---- Scroll-scrubbed convergence -> assembly -> showcase reveal ----
     const convergeTl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionEl,
         start: 'top top',
-        end: '+=200%', // Provides 200vh of scroll distance for the animation
+        end: '+=280%', // Extra scroll distance so the showcase has room to reveal
         scrub: 1.2,
         pin: true,
         anticipatePin: 1
       }
     });
 
-    // Ingredients drift and rotate inward, converging on the center of __right
+    // 1. Ingredients drift and rotate inward, converging on the shawarma's spot
     convergeTl.to(ingredients, {
       left: '50%',
       top: '50%',
@@ -387,7 +409,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       ease: 'power3.inOut'
     }, 0);
 
-    // Assembled shawarma pops in with a glow + rising steam payoff
+    // 2. Assembled shawarma pops in with a glow + rising steam payoff
     convergeTl
       .to(this.finalShawarma.nativeElement, {
         opacity: 1,
@@ -403,6 +425,40 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         opacity: 1,
         duration: 1
       }, 2.5);
+
+    // 3. Intro copy steps aside, the shawarma settles smaller/centered,
+    //    and the showcase callouts + connector lines draw in.
+    convergeTl
+      .to(this.ingredientIntro.nativeElement, {
+        opacity: 0,
+        y: -24,
+        duration: 1,
+        ease: 'power2.inOut',
+        pointerEvents: 'none'
+      }, 3.6)
+      .to(this.finalShawarma.nativeElement, {
+        scale: 0.82,
+        duration: 1.2,
+        ease: 'power2.inOut'
+      }, 3.6)
+      .to(showcaseEl, {
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power1.out'
+      }, 4.1)
+      .to(showcaseItems, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.12,
+        ease: 'power2.out'
+      }, 4.3)
+      .to(showcaseLines, {
+        strokeDashoffset: 0,
+        duration: 1.2,
+        stagger: 0.08,
+        ease: 'power1.inOut'
+      }, 4.3);
 
     this.ingredientTriggerInstance = convergeTl.scrollTrigger;
   }
