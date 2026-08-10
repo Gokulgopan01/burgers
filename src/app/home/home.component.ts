@@ -104,8 +104,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Ingredient Journey ViewChildren
   @ViewChild('ingredientJourney', { static: false }) ingredientJourney?: ElementRef<HTMLElement>;
+  @ViewChild('ingredientEyebrow', { static: false }) ingredientEyebrow?: ElementRef<HTMLElement>;
   @ViewChild('ingredientHeading', { static: false }) ingredientHeading?: ElementRef<HTMLElement>;
   @ViewChild('ingredientDesc', { static: false }) ingredientDesc?: ElementRef<HTMLElement>;
+  @ViewChild('ingredientCta', { static: false }) ingredientCta?: ElementRef<HTMLElement>;
   @ViewChild('ingredientRight', { static: false }) ingredientRight?: ElementRef<HTMLElement>;
   @ViewChild('finalShawarma', { static: false }) finalShawarma?: ElementRef<HTMLElement>;
   @ViewChild('shawarmaGlow', { static: false }) shawarmaGlow?: ElementRef<HTMLElement>;
@@ -125,6 +127,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private io?: IntersectionObserver;
   private scrollTriggerInstance?: ScrollTrigger;
   private ingredientTriggerInstance?: ScrollTrigger;
+  private ingredientEntranceTriggerInstance?: ScrollTrigger;
   private cookingTriggerInstance?: ScrollTrigger;
   private removeScrollLock?: () => void;
 
@@ -143,6 +146,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.ingredientTriggerInstance) {
       this.ingredientTriggerInstance.kill();
+    }
+    if (this.ingredientEntranceTriggerInstance) {
+      this.ingredientEntranceTriggerInstance.kill();
     }
     if (this.cookingTriggerInstance) {
       this.cookingTriggerInstance.kill();
@@ -258,24 +264,107 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.scrollTriggerInstance = tl.scrollTrigger;
   }
 
+  /**
+   * Ingredient Journey:
+   *  - Page-load-style entrance (eyebrow, heading, copy, CTA, scattered ingredients)
+   *    plays once when the section first enters the viewport.
+   *  - A pinned, scroll-scrubbed timeline then converges the scattered
+   *    ingredients into the final assembled shawarma with a glow + steam payoff.
+   */
   private setupIngredientJourney(): void {
-    if (!this.ingredientJourney || !this.ingredientHeading || !this.ingredientDesc || !this.ingredientRight || !this.finalShawarma || !this.shawarmaGlow || !this.shawarmaSteam) {
+    if (
+      !this.ingredientJourney ||
+      !this.ingredientHeading ||
+      !this.ingredientDesc ||
+      !this.ingredientRight ||
+      !this.finalShawarma ||
+      !this.shawarmaGlow ||
+      !this.shawarmaSteam
+    ) {
       return;
     }
 
-    // Initialize SplitType for character-by-character animation
-    const splitText = new SplitType(this.ingredientHeading.nativeElement, { types: 'lines,words,chars' });
-    
-    // Initial states
-    gsap.set(splitText.chars, { y: '110%' });
+    const sectionEl = this.ingredientJourney.nativeElement;
+    const ingredients = this.ingredientRight.nativeElement.querySelectorAll<HTMLElement>('.ingredient');
+    const lineEls = this.ingredientHeading.nativeElement.querySelectorAll<HTMLElement>('.line');
+
+    // Split each heading line independently so "line--accent" keeps its color
+    // while every character still gets its own reveal animation.
+    const splitLines = Array.from(lineEls).map(
+      (line) => new SplitType(line, { types: 'words,chars' })
+    );
+    const allChars = splitLines.flatMap((s) => s.chars ?? []);
+
+    // ---- Initial (hidden) states ----
+    gsap.set(allChars, { y: '110%' });
     gsap.set(this.ingredientDesc.nativeElement, { opacity: 0, y: 20 });
+    if (this.ingredientEyebrow) {
+      gsap.set(this.ingredientEyebrow.nativeElement, { opacity: 0, y: 14 });
+    }
+    if (this.ingredientCta) {
+      gsap.set(this.ingredientCta.nativeElement, { opacity: 0, y: 20 });
+    }
+    gsap.set(ingredients, { opacity: 0, scale: 0.6, y: 40 });
     gsap.set(this.finalShawarma.nativeElement, { opacity: 0, scale: 0.7 });
     gsap.set(this.shawarmaGlow.nativeElement, { opacity: 0 });
     gsap.set(this.shawarmaSteam.nativeElement, { opacity: 0 });
 
-    const tl = gsap.timeline({
+    // ---- Entrance: plays once as the section first comes into view ----
+    const entranceTl = gsap.timeline({
       scrollTrigger: {
-        trigger: this.ingredientJourney.nativeElement,
+        trigger: sectionEl,
+        start: 'top 75%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    if (this.ingredientEyebrow) {
+      entranceTl.to(this.ingredientEyebrow.nativeElement, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power2.out'
+      }, 0);
+    }
+
+    entranceTl
+      .to(allChars, {
+        y: '0%',
+        duration: 1.1,
+        stagger: 0.025,
+        ease: 'power3.out'
+      }, 0.1)
+      .to(this.ingredientDesc.nativeElement, {
+        opacity: 1,
+        y: 0,
+        duration: 0.9,
+        ease: 'power2.out'
+      }, 0.5);
+
+    if (this.ingredientCta) {
+      entranceTl.to(this.ingredientCta.nativeElement, {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: 'power2.out'
+      }, 0.7);
+    }
+
+    entranceTl.to(ingredients, {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      duration: 0.9,
+      stagger: 0.08,
+      ease: 'back.out(1.6)'
+    }, 0.4);
+
+    this.ingredientEntranceTriggerInstance = entranceTl.scrollTrigger;
+
+    // ---- Scroll-scrubbed convergence: ingredients fly together -> shawarma ----
+    const convergeTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionEl,
         start: 'top top',
         end: '+=200%', // Provides 200vh of scroll distance for the animation
         scrub: 1.2,
@@ -284,54 +373,38 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    // 1. Text Reveal Animation
-    tl.to(splitText.chars, {
-      y: '0%',
-      duration: 1.5,
-      stagger: 0.04,
-      ease: 'power3.out'
-    }, 0)
-    .to(this.ingredientDesc.nativeElement, {
-      opacity: 1,
-      y: 0,
-      duration: 1.2,
-      ease: 'power2.out'
-    }, 0.5);
-
-    // 2. Flying Ingredients Parallax Assembly
-    const ingredients = this.ingredientRight.nativeElement.querySelectorAll('.ingredient');
-    
-    // We animate all ingredients converging into the center
-    tl.to(ingredients, {
+    // Ingredients drift and rotate inward, converging on the center of __right
+    convergeTl.to(ingredients, {
       left: '50%',
       top: '50%',
       xPercent: -50,
       yPercent: -50,
-      rotation: (i) => (i % 2 === 0 ? 180 : -180),
-      scale: 0.5,
+      rotation: (i: number) => (i % 2 === 0 ? 180 : -180),
+      scale: 0.4,
       opacity: 0,
       duration: 2.5,
       stagger: 0.15,
       ease: 'power3.inOut'
-    }, 1);
+    }, 0);
 
-    // 3. Reveal Assembled Product + Special Effects
-    tl.to(this.finalShawarma.nativeElement, {
-      opacity: 1,
-      scale: 1,
-      duration: 1.5,
-      ease: 'back.out(1.5)'
-    }, 3)
-    .to(this.shawarmaGlow.nativeElement, {
-      opacity: 1,
-      duration: 1
-    }, 3.5)
-    .to(this.shawarmaSteam.nativeElement, {
-      opacity: 1,
-      duration: 1
-    }, 3.5);
+    // Assembled shawarma pops in with a glow + rising steam payoff
+    convergeTl
+      .to(this.finalShawarma.nativeElement, {
+        opacity: 1,
+        scale: 1,
+        duration: 1.5,
+        ease: 'back.out(1.5)'
+      }, 2)
+      .to(this.shawarmaGlow.nativeElement, {
+        opacity: 1,
+        duration: 1
+      }, 2.5)
+      .to(this.shawarmaSteam.nativeElement, {
+        opacity: 1,
+        duration: 1
+      }, 2.5);
 
-    this.ingredientTriggerInstance = tl.scrollTrigger;
+    this.ingredientTriggerInstance = convergeTl.scrollTrigger;
   }
 
   private setupCookingProcess(): void {
@@ -377,12 +450,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       { opacity: 1, y: '0%', duration: 1 },
       3
     )
-    .to(this.stepCheese.nativeElement, {
-      scaleY: 0.8, // Melts and flattens slightly
-      y: '5%',
-      duration: 1,
-      ease: 'power1.inOut'
-    }, 4);
+      .to(this.stepCheese.nativeElement, {
+        scaleY: 0.8, // Melts and flattens slightly
+        y: '5%',
+        duration: 1,
+        ease: 'power1.inOut'
+      }, 4);
 
     // 4. Veggies fall with stagger
     const veggies = this.cookingProcess.nativeElement.querySelectorAll('.veggies-part');

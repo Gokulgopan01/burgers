@@ -1554,11 +1554,19 @@
 ======================================================*/
 
 .ingredient-journey {
+    --ij-bg: #FDF6EC;
+    --ij-heading: #2A1608;
+    --ij-accent: #C1571F;
+    --ij-body: #6B5B4D;
+    --ij-cta-bg: #B8541D;
+    --ij-cta-bg-hover: #9C4517;
+    --ij-cta-text: #FFF8F1;
+
     position: relative;
     width: 100%;
     height: 100vh;
     height: 100dvh;
-    background-color: #FFF8F1;
+    background-color: var(--ij-bg);
     background-image: url("/assets/ingredients/background.png");
     background-size: cover;
     background-position: center;
@@ -1567,17 +1575,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
-    // Soft grain texture overlay
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        opacity: 0.4;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        pointer-events: none;
-        z-index: 0;
-    }
 
     &__bg {
         position: absolute;
@@ -1617,7 +1614,7 @@
 
     &__left {
         flex: 1;
-        max-width: 500px;
+        max-width: 520px;
         padding-right: 2rem;
         display: flex;
         flex-direction: column;
@@ -1626,49 +1623,130 @@
         @media (max-width: 900px) {
             text-align: center;
             padding-right: 0;
-            padding-top: 10vh;
-            justify-content: flex-end;
-            margin-bottom: 2rem;
+            padding-top: 8vh;
+            justify-content: flex-start;
         }
     }
 
-    &__heading {
-        font-family: var(--font-display);
-        font-size: clamp(2.5rem, 5vw, 5rem);
-        line-height: 1.1;
-        color: #2F1506;
-        margin: 0 0 1.5rem 0;
-        text-transform: uppercase;
+    // ---- Eyebrow ----
+    &__eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        opacity: 0; // Hidden initially for GSAP
+        transform: translateY(14px);
+        margin-bottom: 1rem;
+
+        span {
+            font-family: var(--font-body, inherit);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ij-accent);
+        }
 
         @media (max-width: 900px) {
-            font-size: 2.2rem;
+            justify-content: center;
+        }
+    }
+
+    &__eyebrow-icon {
+        width: 16px;
+        height: 16px;
+        color: var(--ij-accent);
+        transform: rotate(-10deg);
+        flex-shrink: 0;
+    }
+
+    // ---- Heading ----
+    &__heading {
+        font-family: var(--font-display);
+        font-size: clamp(2.4rem, 4.6vw, 4.6rem);
+        line-height: 1.05;
+        color: var(--ij-heading);
+        margin: 0 0 1.5rem 0;
+        text-transform: uppercase;
+        display: flex;
+        flex-direction: column;
+
+        @media (max-width: 900px) {
+            font-size: 2.1rem;
             margin-bottom: 1rem;
+            align-items: center;
         }
 
-        // Setup for SplitType
         .line {
-            overflow: hidden;
+            display: block;
+            overflow: hidden; // masks the char reveal
         }
 
+        .line--accent {
+            color: var(--ij-accent);
+        }
+
+        // Setup for SplitType (chars injected at runtime)
         .char {
             display: inline-block;
             transform: translateY(110%);
+            will-change: transform;
         }
     }
 
     &__desc {
-        font-size: 1.1rem;
-        line-height: 1.6;
-        color: #5C473A;
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: var(--ij-body);
+        max-width: 440px;
         opacity: 0; // Hidden initially for GSAP
         transform: translateY(20px);
+        margin: 0 0 2rem 0;
 
         @media (max-width: 900px) {
             font-size: 0.95rem;
-            line-height: 1.4;
+            line-height: 1.5;
             max-width: 90%;
-            margin: 0 auto;
+            margin: 0 auto 1.75rem;
         }
+    }
+
+    // ---- CTA ----
+    &__cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.9rem;
+        align-self: flex-start;
+        padding: 0.9rem 0.9rem 0.9rem 1.6rem;
+        border-radius: 999px;
+        background: var(--ij-cta-bg);
+        color: var(--ij-cta-text);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0; // Hidden initially for GSAP
+        transform: translateY(20px);
+        transition: background-color 0.25s ease, transform 0.25s ease;
+
+        &:hover {
+            background: var(--ij-cta-bg-hover);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 900px) {
+            align-self: center;
+        }
+    }
+
+    &__cta-icon {
+        width: 34px;
+        height: 34px;
+        padding: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.16);
+        color: var(--ij-cta-text);
+        flex-shrink: 0;
     }
 
     &__right {
@@ -1680,15 +1758,14 @@
         justify-content: center;
 
         @media (max-width: 900px) {
-            height: 50vh;
+            height: 46vh;
             width: 100%;
-            margin-bottom: 10vh;
         }
     }
 }
 
 // ---------------------------------------------------------------------------
-// Floating Ingredients
+// Floating Ingredients — positions loosely mirror the reference scatter
 // ---------------------------------------------------------------------------
 .ingredient {
     position: absolute;
@@ -1696,52 +1773,52 @@
     filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
     animation: gentle-float 6s ease-in-out infinite;
 
+    &--lettuce {
+        width: clamp(90px, 11vw, 160px);
+        left: 2%;
+        top: 8%;
+        animation-delay: -2.5s;
+    }
+
+    &--cheese {
+        width: clamp(90px, 11vw, 160px);
+        left: 34%;
+        top: 0%;
+        animation-delay: -4s;
+    }
+
     &--wrap {
-        width: clamp(200px, 20vw, 350px);
-        right: 5%;
-        top: 10%;
+        width: clamp(180px, 19vw, 320px);
+        right: 2%;
+        top: 6%;
         animation-delay: -1s;
     }
 
-    &--lettuce {
-        width: clamp(100px, 12vw, 180px);
-        left: 5%;
-        top: 20%;
-        animation-delay: -2.5s;
+    &--tomato {
+        width: clamp(80px, 9vw, 140px);
+        left: 8%;
+        top: 44%;
+        animation-delay: -3s;
     }
 
     &--onion {
         width: clamp(70px, 8vw, 120px);
-        right: 25%;
-        bottom: 15%;
+        left: 22%;
+        bottom: 12%;
         animation-delay: -0.5s;
     }
 
-    &--tomato {
-        width: clamp(90px, 10vw, 150px);
-        left: 15%;
-        bottom: 25%;
-        animation-delay: -3s;
-    }
-
     &--chicken {
-        width: clamp(120px, 14vw, 200px);
-        right: 15%;
-        top: 35%;
+        width: clamp(130px, 15vw, 220px);
+        right: 8%;
+        bottom: 8%;
         animation-delay: -1.5s;
     }
 
-    &--cheese {
-        width: clamp(90px, 12vw, 160px);
-        left: 25%;
-        top: 15%;
-        animation-delay: -4s;
-    }
-
     &--sauce {
-        width: clamp(60px, 7vw, 100px);
-        left: 45%;
-        bottom: 10%;
+        width: clamp(55px, 6.5vw, 95px);
+        left: 42%;
+        bottom: 2%;
         animation-delay: -2s;
     }
 }
@@ -1771,7 +1848,7 @@
         position: absolute;
         width: 150%;
         height: 150%;
-        background: radial-gradient(circle, rgba(244, 183, 64, 0.3) 0%, rgba(244, 183, 64, 0) 70%);
+        background: radial-gradient(circle, rgba(244, 183, 64, 0.35) 0%, rgba(244, 183, 64, 0) 70%);
         z-index: 1;
         opacity: 0;
         border-radius: 50%;

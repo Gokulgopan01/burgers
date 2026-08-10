@@ -260,38 +260,62 @@
 
 <!-- ================= INGREDIENT JOURNEY SECTION ================= -->
 <section class="ingredient-journey" #ingredientJourney>
+
     <div class="ingredient-journey__bg">
         <div class="ingredient-journey__watermark" aria-hidden="true">INGREDIENTS</div>
     </div>
 
     <div class="ingredient-journey__content">
+
         <!-- Left Side: Editorial -->
         <div class="ingredient-journey__left">
+
+            <div class="ingredient-journey__eyebrow" #ingredientEyebrow>
+                <svg class="ingredient-journey__eyebrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M20 4c-8 0-15 5-15 13 0 1.2.15 2.3.4 3.3C13 19.5 17.5 13 20 4Z" fill="currentColor" />
+                    <path d="M5.5 20.5C9 15 14 10 20 4" stroke="#FFF8F1" stroke-width="1.2" stroke-linecap="round" />
+                </svg>
+                <span>Premium Ingredients</span>
+            </div>
+
             <h2 class="ingredient-journey__heading" #ingredientHeading>
-                FROM<br>FRESH<br>INGREDIENTS<br>TO<br>PERFECTION
+                <span class="line">From Fresh</span>
+                <span class="line line--accent">Ingredients</span>
+                <span class="line">To Perfection</span>
             </h2>
+
             <p class="ingredient-journey__desc" #ingredientDesc>
                 Every bite starts with the finest, farm-fresh ingredients.
                 Carefully crafted, layered with bold, uncompromising flavours,
                 and rolled into an unforgettable culinary experience.
             </p>
+
+            <a class="ingredient-journey__cta" routerLink="/menu" #ingredientCta>
+                <span>Explore Our Menu</span>
+                <svg class="ingredient-journey__cta-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </a>
+
         </div>
 
         <!-- Right Side: Flying Ingredients -->
         <div class="ingredient-journey__right" #ingredientRight>
+
             <!-- Scattered Ingredients -->
-            <img class="ingredient ingredient--wrap" src="/assets/ingredients/wrap.png" alt="Tortilla Wrap" />
             <img class="ingredient ingredient--lettuce" src="/assets/ingredients/lettuce.png" alt="Crunchy Lettuce" />
-            <img class="ingredient ingredient--onion" src="/assets/ingredients/onion.png" alt="Crisp Onion" />
-            <img class="ingredient ingredient--tomato" src="/assets/ingredients/tomato.png" alt="Fresh Tomato" />
-            <img class="ingredient ingredient--chicken" src="/assets/ingredients/chicken.png" alt="Grilled Chicken" />
             <img class="ingredient ingredient--cheese" src="/assets/ingredients/cheese.png" alt="Melted Cheese" />
+            <img class="ingredient ingredient--wrap" src="/assets/ingredients/wrap.png" alt="Tortilla Wrap" />
+            <img class="ingredient ingredient--tomato" src="/assets/ingredients/tomato.png" alt="Fresh Tomato" />
+            <img class="ingredient ingredient--onion" src="/assets/ingredients/onion.png" alt="Crisp Onion" />
+            <img class="ingredient ingredient--chicken" src="/assets/ingredients/chicken.png" alt="Grilled Chicken" />
             <img class="ingredient ingredient--sauce" src="/assets/ingredients/sauce.png" alt="Signature Sauce" />
 
             <!-- Final Assembled Shawarma -->
             <div class="final-shawarma" #finalShawarma>
                 <div class="final-shawarma__glow" #shawarmaGlow></div>
-                <img class="final-shawarma__img" src="/assets/ingredients/shawarma.png" alt="Assembled Shawarma" />
+                <img class="final-shawarma__img" src="/assets/ingredients/shawarma.webp" alt="Assembled Shawarma" />
                 <!-- Steam Particles -->
                 <div class="final-shawarma__steam" #shawarmaSteam>
                     <span class="steam-particle"></span>
@@ -299,8 +323,11 @@
                     <span class="steam-particle"></span>
                 </div>
             </div>
+
         </div>
+
     </div>
+
 </section>
 
 <!-- ================= COOKING PROCESS SECTION ================= -->
