@@ -1,706 +1,453 @@
-<section class="hero-section">
-  <div class="carousel-container">
-    <div class="carousel-slide" *ngFor="let slide of slides; let i = index" [class.active]="activeSlide === i">
-      <div class="slide-bg" [style.background-image]="'url(' + slide.image + ')'"></div>
-      <div class="slide-overlay"></div>
-    </div>
-  </div>
+<div class="carousel-container" #carouselContainer>
+    <div class="carousel-viewport" [class.reduced-motion]="prefersReducedMotion">
 
-  <div class="hero-content">
-    <!-- Optional Logo -->
-    <div class="hero-logo-container">
-      <img src="assets/Glowmyst_logo.png" alt="Glowmyst Logo" class="hero-logo">
-    </div>
+        <!-- ============ dot navigation ============ -->
+        <!-- (Optional) Dot navigation could be re-implemented using ScrollToPlugin -->
 
-    <h1 class="hero-heading fold-animated">
-      <span class="heading-line">
-        <span class="hero-word">
-          <app-fold-text text="Timeless " splitBy="char" hinge="top" trigger="mount" [duration]="0.65" [stagger]="0.045"
-            [perspective]="700" [creaseShading]="0.55"></app-fold-text>
-        </span>
-        <span class="gold-text hero-word">
-          <app-fold-text text="Jewellery," splitBy="char" hinge="top" trigger="mount" [duration]="0.65"
-            [stagger]="0.045" [staggerOffset]="0.4" [perspective]="700" [creaseShading]="0.55"></app-fold-text>
-        </span>
-      </span>
-
-      <span class="heading-line">
-        <span class="gold-text hero-word">
-          <app-fold-text text="Trendy " splitBy="char" hinge="top" trigger="mount" [duration]="0.65" [stagger]="0.045"
-            [staggerOffset]="0.85" [perspective]="700" [creaseShading]="0.55"></app-fold-text>
-        </span>
-        <span class="hero-word">
-          <app-fold-text text="Sarees." splitBy="char" hinge="top" trigger="mount" [duration]="0.65" [stagger]="0.045"
-            [staggerOffset]="1.15" [perspective]="700" [creaseShading]="0.55"></app-fold-text>
-        </span>
-      </span>
-    </h1>
-
-    <div class="tryon-trynow-header">
-      <span class="tryon-trynow-line"></span>
-    </div>
-
-    <p class="hero-subtitle">Elegance that reflects you.</p>
-
-    <div class="hero-actions">
-      <button class="cta-button primary" routerLink="/jewellery">
-        EXPLORE JEWELLERY
-        <lucide-icon [img]="ArrowRightIcon" class="btn-icon"></lucide-icon>
-      </button>
-      <button class="cta-button secondary" routerLink="/sarees">
-        EXPLORE SAREES
-        <lucide-icon [img]="ArrowRightIcon" class="btn-icon"></lucide-icon>
-      </button>
-    </div>
-  </div>
-
-  <button class="carousel-nav prev" (click)="prevSlide()" aria-label="Previous slide">
-    <lucide-icon [img]="ChevronLeftIcon"></lucide-icon>
-  </button>
-
-  <button class="carousel-nav next" (click)="nextSlide()" aria-label="Next slide">
-    <lucide-icon [img]="ChevronRightIcon"></lucide-icon>
-  </button>
-
-  <div class="carousel-indicators">
-    <button *ngFor="let slide of slides; let i = index" class="indicator" [class.active]="activeSlide === i"
-      (click)="goToSlide(i)" [attr.aria-label]="'Go to slide ' + (i + 1)">
-    </button>
-  </div>
-</section>
-
-<!-- SIGNATURE JEWELRY VERTICAL CAROUSEL -->
-<section class="signature-carousel-section" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
-  <!-- Background Image with Overlay -->
-  <div class="sig-bg-layer">
-    <div class="sig-bg-overlay"></div>
-  </div>
-
-  <div class="sig-container">
-    <!-- Left Content -->
-    <div class="sig-left-content">
-      <div class="sig-heading fold-animated">
-        <span class="sig-heading-line1">
-          <app-fold-text text="Timeless " splitBy="char" hinge="top" trigger="scroll" [duration]="0.65"
-            [stagger]="0.045" [perspective]="700" [creaseShading]="0.55"></app-fold-text>
-          <app-fold-text text="Beauty." splitBy="char" hinge="top" trigger="scroll" [duration]="0.65" [stagger]="0.045"
-            [staggerOffset]="0.4" [perspective]="700" [creaseShading]="0.55"></app-fold-text>
-        </span>
-        <span class="sig-heading-line2">
-          <app-fold-text text="Crafted " splitBy="char" hinge="top" trigger="scroll" [duration]="0.65" [stagger]="0.045"
-            [staggerOffset]="0.8" [perspective]="700" [creaseShading]="0.55"></app-fold-text>
-          <app-fold-text text="for " splitBy="char" hinge="top" trigger="scroll" [duration]="0.65" [stagger]="0.045"
-            [staggerOffset]="1.1" [perspective]="700" [creaseShading]="0.55"></app-fold-text>
-          <app-fold-text text="You." splitBy="char" hinge="top" trigger="scroll" [duration]="0.65" [stagger]="0.045"
-            [staggerOffset]="1.3" [perspective]="700" [creaseShading]="0.55"></app-fold-text>
-        </span>
-      </div>
-      <hr class="sig-divider" />
-      <p class="sig-description">
-        From minimalist elegance to bold statements, our jewelry is designed to elevate your style effortlessly.
-      </p>
-      <button class="sig-shop-btn" routerLink="/sarees">
-        Shop Now <lucide-icon [img]="ArrowRightIcon" class="icon"></lucide-icon>
-      </button>
-    </div>
-
-    <div class="sig-right-carousel-wrapper">
-      <app-depth-carousel [items]="signatureCategories"></app-depth-carousel>
-    </div>
-  </div>
-</section>
-
-<!-- EARRINGS TRY-ON SECTION -->
-<section class="tryon-section">
-  <div class="tryon-container">
-
-    <!-- Left Column: Model Area -->
-    <div class="tryon-left-model">
-      <div class="tryon-model-frame">
-        <img [src]="tryOnModelImage" alt="Model wearing earrings" class="tryon-model-img">
-        <div class="tryon-overlay-wrapper" #earOverlayTarget [class.tryon-crossfade]="tryOnAnimating"
-          [class.tryon-landed]="tryOnLanded">
-          <img *ngIf="selectedTryOnProduct" [src]="selectedTryOnProduct.image" alt="Earring Overlay"
-            class="tryon-overlay-img">
-        </div>
-      </div>
-    </div>
-
-    <!-- Right Column: Content & Selector -->
-    <div class="tryon-right-content">
-      <div class="tryon-trynow-header">
-        <button class="tryon-nav-btn prev-btn" (click)="prevTryOnCarousel()">
-          <lucide-icon [img]="ChevronLeftIcon" class="icon"></lucide-icon>
-        </button>
-
-        <div class="tryon-trynow-title-wrapper">
-          <span class="tryon-trynow-text">Try Now</span>
-          <div class="tryon-trynow-line-wrapper">
-            <span class="tryon-trynow-line"></span>
-            <span class="tryon-trynow-diamond">◆</span>
-            <span class="tryon-trynow-line"></span>
-          </div>
+        <!-- ============ brand mark ============ -->
+        <div class="brand-mark">
+            <span class="brand-mark__main">yummy</span>
+            <span class="brand-mark__sub">burgers</span>
         </div>
 
-        <button class="tryon-nav-btn next-btn" (click)="nextTryOnCarousel()">
-          <lucide-icon [img]="ChevronRightIcon" class="icon"></lucide-icon>
-        </button>
-      </div>
+        <!-- ============ sliding track (backgrounds + copy) ============ -->
+        <div class="slides-track">
 
-      <div class="tryon-carousel-wrapper" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
-        <div class="tryon-carousel-viewport">
-          <app-depth-carousel #depthCarousel [showControls]="false" [items]="tryOnProductsForCarousel"
-            (onChange)="onTryOnChange($event)" [cardWidth]="250" [cardHeight]="400" [radius]="12" [depth]="80"
-            [spread]="270" [tilt]="0" [perspective]="1200" [visibleCards]="2" [duration]="800"
-            ease="cubic-bezier(0.16, 1, 0.3, 1)">
+            <!-- SLIDE 0 — Strawberry Bliss -->
+            <section class="slide slide--juice">
+                <div class="bg bg--juice"></div>
+                <div class="bg-watermark bg-watermark--juice">WRAPPED</div>
 
-            <ng-template let-item let-i="index" let-active="active" let-distance="distance">
-              <div class="tryon-card-inner" [class.active]="active" [class.inactive]="!active">
-                <div class="tryon-card-img-wrapper">
-                  <img [src]="item.image" [alt]="item.title || item.name" class="tryon-card-img">
+                <div class="slide-copy slide-copy--juice">
+                    <span class="eyebrow">wrapped fresh, grilled to perfection</span>
+                    <h1 class="headline">Roll With It</h1>
+                </div>
+            </section>
+
+            <!-- SLIDE 1 — Yummy Burgers -->
+            <section class="slide slide--burger">
+                <div class="bg bg--burger"></div>
+                <div class="bg-watermark bg-watermark--burger bg-watermark--right">STACK</div>
+
+                <div class="slide-copy slide-copy--burger">
+                    <span class="eyebrow">big bites, bold flavours</span>
+                    <h1 class="headline">Stacked<br />Happiness</h1>
+                </div>
+            </section>
+
+            <!-- SLIDE 2 — Crispy Fries (extend with your own asset the same way) -->
+            <section class="slide slide--fries">
+                <div class="bg bg--fries"></div>
+                <div class="bg-watermark bg-watermark--fries">TWIRLED</div>
+
+                <div class="slide-copy slide-copy--fries">
+                    <span class="eyebrow">creamy, saucy, simply irresistible</span>
+                    <h1 class="headline">Twirl Into Joy</h1>
+                </div>
+            </section>
+
+            <!-- SLIDE 3 — Sweet Finish -->
+            <section class="slide slide--dessert">
+                <div class="bg bg--dessert"></div>
+                <div class="bg-watermark bg-watermark--dessert">STEAMED</div>
+
+                <div class="slide-copy slide-copy--dessert">
+                    <span class="eyebrow">spiced right, steamed soft</span>
+                    <h1 class="headline">Momos<br />Mania</h1>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ============ travelling food photos ============ -->
+
+        <img class="food-photo food-photo--juice" src="assets/home/shawarma_roll.png" alt="Chilled strawberry juice" />
+
+        <img class="food-photo food-photo--burger" src="assets/home/burger.png" alt="Stacked cheeseburger" />
+
+        <!-- Placeholder travelling elements for slides 2 & 3.
+       Swap the div for an <img src="assets/home/..."> once you have photos. -->
+        <img class="food-photo food-photo--fries" src="assets/home/pasta.png" alt="Crispy french fries" />
+        <img class="food-photo food-photo--dessert" src="assets/home/momos.png" alt="Sweet strawberry dessert" />
+
+        <!-- ============ scroll hint ============ -->
+        <div class="scroll-hint">
+            <span class="scroll-hint__mouse"><span class="scroll-hint__wheel"></span></span>
+            <span class="scroll-hint__label">scroll</span>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ================= TICKER SECTION ================= -->
+<div class="marquee-section">
+    <div class="marquee marquee--yellow">
+        <div class="marquee__track">
+            <span>NO SHORTCUTS &bull; NO FILLERS &bull; HIGH PROTEIN &bull; FRESHLY PREPARED &bull; NO PRESERVATIVES
+                &bull; NO
+                SHORTCUTS &bull; NO FILLERS &bull; HIGH PROTEIN &bull;</span>
+            <span>FRESHLY PREPARED &bull; NO PRESERVATIVES &bull; NO SHORTCUTS &bull; NO FILLERS &bull; HIGH PROTEIN
+                &bull; NO
+                FILLERS &bull; FRESHLY PREPARED &bull; NO PRESERVATIVES &bull;</span>
+        </div>
+    </div>
+    <div class="marquee marquee--red">
+        <div class="marquee__track marquee__track--reverse">
+            <span>JUST BOLD TASTE IN EVERY BITE &bull; MADE TO ORDER &bull; BOLD FLAVOUR
+                &bull; JUST BOLD TASTE IN EVERY BITE &bull;</span>
+            <span>MADE TO ORDER &bull; BOLD FLAVOUR &bull; JUST BOLD TASTE IN EVERY
+                BITE
+                &bull; MADE TO ORDER &bull; BOLD FLAVOUR &bull;</span>
+        </div>
+    </div>
+</div>
+
+<!-- ================= WRAPS BENEFITS SECTION ================= -->
+
+<section class="wrap-benefits">
+
+    <div class="wrap-benefits__left">
+
+        <span class="section-tag">
+            Fresh • Healthy • Delicious
+        </span>
+
+        <h2>
+            WHAT'S<br>
+            INSIDE<br>
+            OUR WRAPS
+        </h2>
+
+        <div class="divider"></div>
+
+        <p class="intro">
+            Every wrap is prepared with fresh vegetables,
+            premium fillings and homemade sauces to give you
+            the perfect balance of taste and nutrition.
+        </p>
+
+        <div class="benefits">
+
+            <div class="benefit">
+                <div class="icon">🥬</div>
+
+                <div>
+                    <h4>Farm Fresh Vegetables</h4>
+                    <p>
+                        Lettuce, tomatoes, onions,
+                        cucumbers and peppers loaded
+                        with vitamins and minerals.
+                    </p>
+                </div>
+            </div>
+
+            <div class="benefit">
+
+                <div class="icon">🥩</div>
+
+                <div>
+                    <h4>High Protein Filling</h4>
+
+                    <p>
+                        Grilled chicken, paneer or veggie
+                        fillings keep you energized.
+                    </p>
                 </div>
 
-                <div class="tryon-card-info">
-                  <h4 class="tryon-card-name">{{ item.title || item.name }}</h4>
-                  <div class="tryon-card-price">{{ item.subtitle || item.price || '₹1,299' }}</div>
+            </div>
 
-                  <!-- Using routerLink or an empty click handler for Buy Now since there isn't a known handler yet -->
-                  <button class="tryon-buy-btn" routerLink="/jewellery">
-                    Buy Now
-                    <lucide-icon [img]="ShoppingBagIcon" class="buy-bag-icon" size="14"></lucide-icon>
-                  </button>
+            <div class="benefit">
+
+                <div class="icon">🌾</div>
+
+                <div>
+                    <h4>Rich In Fiber</h4>
+
+                    <p>
+                        Fresh vegetables help digestion
+                        while keeping every bite satisfying.
+                    </p>
+
                 </div>
-              </div>
-            </ng-template>
 
-          </app-depth-carousel>
+            </div>
+
+            <div class="benefit">
+
+                <div class="icon">🌿</div>
+
+                <div>
+
+                    <h4>Fresh Herbs</h4>
+
+                    <p>
+                        Mint, oregano and signature herbs
+                        add authentic flavor naturally.
+                    </p>
+
+                </div>
+
+            </div>
+
         </div>
-      </div>
+
     </div>
 
-  </div>
+    <div class="wrap-benefits__right">
+
+        <img src="assets/home/roll_shawarma.png" alt="Healthy Vegetable Wrap">
+
+    </div>
+
 </section>
 
-<!-- LOVED BY CELEBRITIES SECTION -->
-<section class="celebrity-section">
-  <div class="celebrity-banner">
-    <div class="celebrity-content new-edition-content">
-      <div class="special-edition-wrapper">
-        <span class="se-line"></span>
-        <!-- <span class="se-text">SPECIAL EDITION</span> -->
-        <span class="se-line"></span>
-      </div>
-      <h2 class="ethereal-title">
-        <span class="ethereal-caps">ETHEREAL</span><br>
-        <span class="elegance-script">Elegance</span>
-      </h2>
-      <p class="timeless-text">For the moments that<br>deserve to be timeless.</p>
-      <button class="discover-btn" routerLink="/sarees">
-        DISCOVER COLLECTION
-      </button>
+
+
+<section class="signatures" #sectionRoot [class.is-visible]="isVisible" [class.reduced-motion]="prefersReducedMotion"
+    aria-labelledby="signatures-heading">
+    <!-- Subtle Background Elements -->
+    <div class="signatures__bg"></div>
+    <span class="signatures__watermark" aria-hidden="true">SIGNATURES</span>
+
+    <div class="signatures__inner">
+        <!-- New Split Header Layout -->
+        <div class="signatures__hero">
+            <header class="signatures__header">
+                <p class="signatures__index">01 / SIGNATURE MENU</p>
+                <p class="signatures__eyebrow">The Ones Worth Craving</p>
+                <h2 class="signatures__heading" id="signatures-heading">Made To Be Remembered</h2>
+                <p class="signatures__subtext">Our most-loved dishes, prepared fresh and loaded with flavour.</p>
+            </header>
+
+            <!-- Large Appetising Food Image in the upper right -->
+            <div class="signatures__hero-image-wrapper">
+                <img src="/assets/sig_menu/Shawarma.jpg" alt="Signature Shawarma" class="signatures__hero-image">
+            </div>
+        </div>
+
+        <!-- Horizontal Signature Showcase (Editorial Layout) -->
+        <div class="signatures__showcase" role="list">
+            <article *ngFor="let dish of dishes; let i = index; trackBy: trackByDishId" role="listitem"
+                class="food-card" [style.--i]="i">
+                <div class="food-card__media">
+                    <img [src]="dish.image" [alt]="dish.alt" loading="lazy" />
+                    <span class="food-card__category">{{ dish.category }}</span>
+                </div>
+
+                <div class="food-card__body">
+                    <div class="food-card__top">
+                        <h3 class="food-card__name">{{ dish.name }}</h3>
+                        <span class="food-card__price">{{ dish.price }}</span>
+                    </div>
+                    <p class="food-card__desc">{{ dish.description }}</p>
+                    <div class="food-card__bottom">
+                        <button type="button" class="food-card__cta">
+                            {{ dish.featured ? 'Order Now' : 'Add to Cart' }}
+                        </button>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <footer class="signatures__footer">
+            <a routerLink="/menu" class="signatures__view-all">
+                View Full Menu <span aria-hidden="true">→</span>
+            </a>
+        </footer>
     </div>
-  </div>
 </section>
 
+<!-- ================= INGREDIENT JOURNEY SECTION ================= -->
+<section class="ingredient-journey" #ingredientJourney>
 
-<!-- TRENDING NOW SECTION -->
-<section class="trending-section">
-  <!-- Cut-out Heading style matching the image -->
-  <div class="trending-heading-wrapper">
-    <div class="heading-line-left"></div>
-    <div class="heading-content">
-      <!-- <svg class="heading-ornament" width="24" height="12" viewBox="0 0 24 12" fill="none"
-        xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 0L14 4L24 6L14 8L12 12L10 8L0 6L10 4L12 0Z" fill="rgba(201,154,69,0.8)" />
-      </svg> -->
-      <h2 class="category-title">TRENDING SAREES</h2>
-      <!-- <svg class="heading-ornament" width="24" height="12" viewBox="0 0 24 12" fill="none"
-        xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 0L14 4L24 6L14 8L12 12L10 8L0 6L10 4L12 0Z" fill="rgba(201,154,69,0.8)" />
-      </svg> -->
+    <div class="ingredient-journey__bg">
+        <div class="ingredient-journey__watermark" aria-hidden="true">INGREDIENTS</div>
     </div>
-    <div class="heading-line-right"></div>
-  </div>
 
-  <div class="trending-grid">
-    <div *ngFor="let product of trendingProducts" class="product-card">
-      <div class="product-image-container">
-        <span *ngIf="product.badge" class="product-badge">{{ product.badge }}</span>
-        <!-- <button class="wishlist-btn" aria-label="Add to Wishlist">
-          <lucide-icon [img]="HeartIcon" class="heart-icon"></lucide-icon>
-        </button> -->
-        <img [src]="product.image" [alt]="product.name" class="product-image">
-      </div>
-      <div class="product-info">
-        <div class="title-rating-row">
-          <h3 class="product-name">{{ product.name }}</h3>
-          <div class="product-rating">
-            <lucide-icon [img]="StarIcon" class="star-icon" size="14"></lucide-icon>
-            <span class="rating-value">{{ product.rating | number:'1.1-1' }}</span>
-          </div>
+    <!-- Intro copy: fades out once the shawarma is fully assembled -->
+    <div class="ingredient-journey__intro" #ingredientIntro>
+
+        <div class="ingredient-journey__eyebrow" #ingredientEyebrow>
+            <svg class="ingredient-journey__eyebrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M20 4c-8 0-15 5-15 13 0 1.2.15 2.3.4 3.3C13 19.5 17.5 13 20 4Z" fill="currentColor" />
+                <path d="M5.5 20.5C9 15 14 10 20 4" stroke="#FFF8F1" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
+            <span>Premium Ingredients</span>
         </div>
-        <div class="product-pricing">
-          <span class="current-price">₹{{ product.price | number:'1.0-0' }}</span>
-          <span class="original-price">₹{{ product.originalPrice | number:'1.0-0' }}</span>
-        </div>
-        <button class="buy-now-btn" routerLink="/sarees">
-          <lucide-icon [img]="ShoppingBagIcon" class="bag-icon" size="14"></lucide-icon>
-          BUY NOW
-        </button>
-      </div>
+
+        <h2 class="ingredient-journey__heading" #ingredientHeading>
+            <span class="line">From Fresh</span>
+            <span class="line line--accent">Ingredients</span>
+            <span class="line">To Perfection</span>
+        </h2>
+
+        <p class="ingredient-journey__desc" #ingredientDesc>
+            Every bite starts with the finest, farm-fresh ingredients.
+            Carefully crafted, layered with bold, uncompromising flavours,
+            and rolled into an unforgettable culinary experience.
+        </p>
+
+        <a class="ingredient-journey__cta" routerLink="/menu" #ingredientCta>
+            <span>Explore Our Menu</span>
+            <svg class="ingredient-journey__cta-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </a>
+
     </div>
-  </div>
 
-  <div class="view-all-container">
-    <button class="view-all-btn" routerLink="/sarees">
-      VIEW ALL
-      <lucide-icon [img]="ArrowRightIcon" class="arrow-icon" size="16"></lucide-icon>
-    </button>
-  </div>
+    <!-- Stage: scattered ingredients that converge into the shawarma -->
+    <div class="ingredient-journey__stage" #ingredientStage>
+
+        <img class="ingredient ingredient--lettuce" src="/assets/ingredients/lettuce.png" alt="Crunchy Lettuce" />
+        <img class="ingredient ingredient--cheese" src="/assets/ingredients/cheese.png" alt="Melted Cheese" />
+        <img class="ingredient ingredient--wrap" src="/assets/ingredients/wrap.png" alt="Tortilla Wrap" />
+        <img class="ingredient ingredient--tomato" src="/assets/ingredients/tomato.png" alt="Fresh Tomato" />
+        <img class="ingredient ingredient--onion" src="/assets/ingredients/onion.png" alt="Crisp Onion" />
+        <img class="ingredient ingredient--chicken" src="/assets/ingredients/chicken.png" alt="Grilled Chicken" />
+        <img class="ingredient ingredient--sauce" src="/assets/ingredients/sauce.png" alt="Signature Sauce" />
+
+        <div class="final-shawarma" #finalShawarma>
+            <div class="final-shawarma__glow" #shawarmaGlow></div>
+            <img class="final-shawarma__img" src="/assets/ingredients/shawarma.webp" alt="Assembled Shawarma" />
+            <div class="final-shawarma__steam" #shawarmaSteam>
+                <span class="steam-particle"></span>
+                <span class="steam-particle"></span>
+                <span class="steam-particle"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Showcase: replaces the intro once the shawarma has assembled -->
+    <div class="ingredient-journey__showcase" #ingredientShowcase>
+
+        <svg class="showcase__lines" viewBox="0 0 1400 620" preserveAspectRatio="none" aria-hidden="true">
+            <path class="showcase__line" d="M330,90 C450,110 520,140 640,190" />
+            <path class="showcase__line" d="M300,310 C420,300 520,300 640,300" />
+            <path class="showcase__line" d="M320,520 C440,480 520,440 640,380" />
+            <path class="showcase__line" d="M1070,90 C950,110 880,140 760,190" />
+            <path class="showcase__line" d="M1100,310 C980,300 880,300 760,300" />
+            <path class="showcase__line" d="M1080,520 C960,480 880,440 760,380" />
+        </svg>
+
+        <div class="showcase__col showcase__col--left">
+            <div class="showcase__item">
+                <span class="showcase__icon showcase__icon--leaf" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M20 4c-8 0-15 5-15 13 0 1.2.15 2.3.4 3.3C13 19.5 17.5 13 20 4Z" fill="currentColor" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Fresh &amp; Crisp</h3>
+                    <p>Hand-picked vegetables for the perfect crunch.</p>
+                </div>
+            </div>
+            <div class="showcase__item">
+                <span class="showcase__icon showcase__icon--tomato" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="13" r="8" fill="currentColor" />
+                        <path d="M9 6c1-2 5-2 6 0" stroke="#fff" stroke-width="1.4" stroke-linecap="round" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Juicy &amp; Flavorful</h3>
+                    <p>Ripe tomatoes and onions add a burst of freshness.</p>
+                </div>
+            </div>
+            <div class="showcase__item">
+                <span class="showcase__icon showcase__icon--onion" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="8" fill="currentColor" />
+                        <circle cx="12" cy="12" r="4" fill="#fff" opacity="0.5" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Bold &amp; Zesty</h3>
+                    <p>Signature sauces for that irresistible kick.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="showcase__col showcase__col--right">
+            <div class="showcase__item showcase__item--reverse">
+                <span class="showcase__icon showcase__icon--cheese" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M3 17h18l-9-11-9 11Z" fill="currentColor" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Rich &amp; Creamy</h3>
+                    <p>Premium cheese for a smooth, delicious bite.</p>
+                </div>
+            </div>
+            <div class="showcase__item showcase__item--reverse">
+                <span class="showcase__icon showcase__icon--chicken" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M8 21c-3-1-5-4-4-7 1-3 4-4 6-2 1-3 5-4 7-1 2 3 0 7-3 8-1 2-4 3-6 2Z"
+                            fill="currentColor" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Perfectly Seasoned</h3>
+                    <p>Marinated to perfection and grilled to perfection.</p>
+                </div>
+            </div>
+            <div class="showcase__item showcase__item--reverse">
+                <span class="showcase__icon showcase__icon--wrap" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <rect x="4" y="9" width="16" height="6" rx="3" fill="currentColor" />
+                    </svg>
+                </span>
+                <div class="showcase__text">
+                    <h3>Made to Perfection</h3>
+                    <p>All wrapped up in warm, soft bread for the ultimate experience.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </section>
 
-<!-- JEWELLERY BANNER SECTION -->
-<section class="split-banner-section">
-  <div class="split-banner">
-    <div class="split-content">
-      <div class="split-tag">
-        <span class="tag-icon">✦</span>
-        FEATURED COLLECTION · IMITATION JEWELLERY
-      </div>
+<!-- ================= COOKING PROCESS SECTION ================= -->
+<section class="cooking-process" #cookingProcess>
+    <div class="cooking-process__bg" #cookingBg></div>
 
-      <h2 class="split-title">
-        <span class="title-regular">Imitation</span><br>
-        <span class="title-script">Necklace Sets</span>
-      </h2>
-
-      <p class="split-desc">
-        Temple grandeur meets everyday elegance — <br>
-        crafted for the modern South Indian woman
-      </p>
-
-      <div class="split-stats">
-        <div class="stat-item">
-          <span class="stat-value">2,200+</span>
-          <span class="stat-label">DESIGNS</span>
+    <div class="cooking-process__stage">
+        <!-- Floating spice particles for cinematic depth -->
+        <div class="spice-particles">
+            <div class="spice spice-1"></div>
+            <div class="spice spice-2"></div>
+            <div class="spice spice-3"></div>
+            <div class="spice spice-4"></div>
+            <div class="spice spice-5"></div>
+            <div class="spice spice-6"></div>
         </div>
-        <div class="stat-item">
-          <span class="stat-value">₹299</span>
-          <span class="stat-label">STARTING FROM</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">Daily</span>
-          <span class="stat-label">NEW ADDITIONS</span>
-        </div>
-      </div>
 
-      <div class="split-divider"></div>
+        <!-- Sequential Cooking Steps -->
+        <img class="cooking-step cooking-step--tortilla" #stepTortilla src="/assets/ingredients/wrap.png"
+            alt="Fresh Tortilla" />
+        <img class="cooking-step cooking-step--chicken" #stepChicken src="/assets/ingredients/chicken.png"
+            alt="Grilled Chicken" />
+        <img class="cooking-step cooking-step--cheese" #stepCheese src="/assets/ingredients/cheese.png"
+            alt="Melted Cheese" />
 
-      <div class="split-actions">
-        <div class="hero-actions">
-          <button class="cta-button primary" routerLink="/jewellery">
-            SHOP ALL NECKLACES
-            <lucide-icon [img]="ArrowRightIcon" class="btn-icon"></lucide-icon>
-          </button>
-          <button class="cta-button secondary" routerLink="/jewellery">
-            BRIDAL SETS
-            <lucide-icon [img]="ArrowRightIcon" class="btn-icon"></lucide-icon>
-          </button>
-        </div>
-      </div>
+        <!-- Splitting veggies to allow stagger animation -->
+        <img class="cooking-step cooking-step--veggies veggies-part" #stepVeggies1 src="/assets/ingredients/lettuce.png"
+            alt="Fresh Vegetables" />
+        <img class="cooking-step cooking-step--veggies veggies-part" #stepVeggies2 src="/assets/ingredients/lettuce.png"
+            alt="Fresh Vegetables" />
+        <img class="cooking-step cooking-step--veggies veggies-part" #stepVeggies3 src="/assets/ingredients/lettuce.png"
+            alt="Fresh Vegetables" />
+
+        <img class="cooking-step cooking-step--sauce" #stepSauce src="/assets/ingredients/sauce.png"
+            alt="Signature Sauce" />
+
+        <!-- Final Wrapped Product -->
+        <img class="cooking-step cooking-step--final" #stepFinal src="/assets/ingredients/shawarma.png"
+            alt="Perfect Wrapped Shawarma" />
     </div>
-
-    <div class="split-image">
-      <img src="assets/home/necklase.png" alt="Imitation Necklace Sets">
-    </div>
-  </div>
-</section>
-
-<section class="featured-necklaces-section">
-  <div class="featured-necklaces-grid">
-    <div *ngFor="let product of featuredNecklaces" class="featured-necklace-card">
-      <div class="fn-image-container">
-        <span *ngIf="product.badge" class="fn-badge" [class.sale]="product.badge === 'SALE'">{{ product.badge
-          }}</span>
-        <img [src]="product.image" [alt]="product.name" class="fn-image">
-      </div>
-      <div class="fn-info">
-        <h4 class="fn-name">{{ product.name }}</h4>
-        <span class="fn-price">Rs. {{ product.price | number:'1.2-2' }}</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- BANGLES BANNER SECTION -->
-<section class="split-banner-section reverse">
-  <div class="split-banner reverse">
-    <div class="split-content">
-      <div class="split-tag">
-        <span class="tag-icon">✦</span>
-        EXCLUSIVE COLLECTION · DESIGNER BANGLES
-      </div>
-
-      <h2 class="split-title">
-        <span class="title-regular">Exquisite</span><br>
-        <span class="title-script">Bangle Sets</span>
-      </h2>
-
-      <p class="split-desc">
-        The perfect jingle for your wrists — <br>
-        crafted for the modern South Indian woman
-      </p>
-
-      <ul class="split-bullets">
-        <li>Antique, Temple & AD Stone Bangles</li>
-        <li>Kundan & Polki Bridal Sets</li>
-        <li>Daily wear gold plated kadas</li>
-        <li>Sizes available from 2.2 to 2.8</li>
-      </ul>
-
-      <div class="split-divider"></div>
-
-      <div class="split-stats">
-        <div class="stat-item">
-          <span class="stat-value">500+</span>
-          <span class="stat-label">DESIGNS</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">₹499</span>
-          <span class="stat-label">STARTING FROM</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">Daily</span>
-          <span class="stat-label">NEW ADDITIONS</span>
-        </div>
-      </div>
-
-      <div class="split-actions">
-        <div class="hero-actions">
-          <button class="cta-button primary" routerLink="/jewellery">
-            SHOP ALL BANGLES
-            <lucide-icon [img]="ArrowRightIcon" class="btn-icon"></lucide-icon>
-          </button>
-          <button class="cta-button secondary" routerLink="/jewellery">
-            BRIDAL KADAS
-            <lucide-icon [img]="ArrowRightIcon" class="btn-icon"></lucide-icon>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="split-image">
-      <img src="assets/home/bangles.png" alt="Exquisite Bangle Sets">
-    </div>
-  </div>
-</section>
-
-<section class="featured-necklaces-section">
-  <div class="featured-necklaces-grid">
-    <div *ngFor="let product of featuredBangles" class="featured-necklace-card">
-      <div class="fn-image-container">
-        <span *ngIf="product.badge" class="fn-badge" [class.sale]="product.badge === 'SALE'">{{ product.badge }}</span>
-        <img [src]="product.image" [alt]="product.name" class="fn-image">
-      </div>
-      <div class="fn-info">
-        <h4 class="fn-name">{{ product.name }}</h4>
-        <span class="fn-price">Rs. {{ product.price | number:'1.2-2' }}</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- RINGS BANNER SECTION -->
-<section class="split-banner-section">
-  <div class="split-banner">
-    <div class="split-content">
-      <div class="split-tag">
-        <span class="tag-icon">✦</span>
-        EXCLUSIVE COLLECTION · DESIGNER RINGS
-      </div>
-
-      <h2 class="split-title">
-        <span class="title-regular">Elegant</span><br>
-        <span class="title-script">Ring Sets</span>
-      </h2>
-
-      <p class="split-desc">
-        A touch of grace for your fingers — <br>
-        crafted for the modern South Indian woman
-      </p>
-
-      <ul class="split-bullets">
-        <li>Ruby studded, Temple & AD Stone Rings</li>
-        <li>Kundan & Polki Bridal Rings</li>
-        <li>Daily wear gold plated bands</li>
-        <li>Sizes available for all</li>
-      </ul>
-
-      <div class="split-divider"></div>
-
-      <div class="split-stats">
-        <div class="stat-item">
-          <span class="stat-value">300+</span>
-          <span class="stat-label">DESIGNS</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">₹299</span>
-          <span class="stat-label">STARTING FROM</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">Daily</span>
-          <span class="stat-label">NEW ADDITIONS</span>
-        </div>
-      </div>
-
-      <div class="split-actions">
-        <div class="hero-actions">
-          <button class="cta-button primary" routerLink="/jewellery">
-            SHOP ALL RINGS
-            <lucide-icon [img]="ArrowRightIcon" class="btn-icon"></lucide-icon>
-          </button>
-          <button class="cta-button secondary" routerLink="/jewellery">
-            BRIDAL RINGS
-            <lucide-icon [img]="ArrowRightIcon" class="btn-icon"></lucide-icon>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="split-image">
-      <img src="assets/home/rings.png" alt="Elegant Ring Sets">
-    </div>
-  </div>
-</section>
-
-<!-- EARRINGS GRID SECTION -->
-<section class="featured-necklaces-section">
-  <div class="featured-necklaces-grid">
-    <div *ngFor="let product of featuredEarrings" class="featured-necklace-card">
-      <div class="fn-image-container">
-        <span *ngIf="product.badge" class="fn-badge" [class.sale]="product.badge === 'SALE'">{{ product.badge }}</span>
-        <img [src]="product.image" [alt]="product.name" class="fn-image">
-      </div>
-      <div class="fn-info">
-        <h4 class="fn-name">{{ product.name }}</h4>
-        <span class="fn-price">Rs. {{ product.price | number:'1.2-2' }}</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- EXQUISITE JEWELLERY BANNER SECTION -->
-<section class="split-banner-section reverse">
-  <div class="split-banner reverse">
-    <div class="split-content">
-      <div class="split-tag">
-        <span class="tag-icon">✦</span>
-        MASTERPIECE COLLECTION · FINE JEWELLERY
-      </div>
-
-      <h2 class="split-title">
-        <span class="title-regular">Exquisite</span><br>
-        <span class="title-script">Jewellery</span>
-      </h2>
-
-      <p class="split-desc">
-        Timeless artistry and unmatched craftsmanship — <br>
-        for every grand occasion
-      </p>
-
-      <ul class="split-bullets">
-        <li>Handcrafted bridal masterpieces</li>
-        <li>Authentic Temple & Antique designs</li>
-        <li>Premium Kundan & Polki sets</li>
-        <li>Available in 22k gold plating</li>
-      </ul>
-
-      <div class="split-divider"></div>
-
-      <div class="split-stats">
-        <div class="stat-item">
-          <span class="stat-value">1000+</span>
-          <span class="stat-label">DESIGNS</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">₹999</span>
-          <span class="stat-label">STARTING FROM</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">Weekly</span>
-          <span class="stat-label">NEW ADDITIONS</span>
-        </div>
-      </div>
-
-      <div class="split-actions">
-        <div class="hero-actions">
-          <button class="cta-button primary" routerLink="/jewellery">
-            SHOP MASTERPIECE COLLECTION
-            <lucide-icon [img]="ArrowRightIcon" class="btn-icon"></lucide-icon>
-          </button>
-          <button class="cta-button secondary" routerLink="/jewellery">
-            VIEW CATALOG
-            <lucide-icon [img]="ArrowRightIcon" class="btn-icon"></lucide-icon>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="split-image">
-      <img src="assets/home/earings.png" alt="Exquisite Jewellery Sets">
-    </div>
-  </div>
-</section>
-
-<!-- EXQUISITE JEWELLERY GRID SECTION -->
-<section class="featured-necklaces-section">
-  <div class="featured-necklaces-grid">
-    <div *ngFor="let product of jewelleryProducts" class="featured-necklace-card">
-      <div class="fn-image-container">
-        <span *ngIf="product.badge" class="fn-badge" [class.sale]="product.badge === 'SALE'">{{ product.badge }}</span>
-        <img [src]="product.image" [alt]="product.name" class="fn-image">
-      </div>
-      <div class="fn-info">
-        <h4 class="fn-name">{{ product.name }}</h4>
-        <span class="fn-price">Rs. {{ product.price | number:'1.2-2' }}</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- REVIEWS SECTION -->
-<section class="reviews-section">
-  <div class="reviews-header-container">
-    <div class="reviews-header-left">
-      <div class="reviews-tag">REAL WOMEN, REAL MOMENTS.</div>
-      <h2 class="reviews-title">Loved by Thousands of Happy Brides</h2>
-      <div class="reviews-ornament">
-        <span></span><span class="diamond"></span><span></span>
-      </div>
-    </div>
-    <div class="reviews-header-right">
-      <div class="rating-score">4.9/5 <span class="stars">★★★★★</span></div>
-      <div class="rating-subtitle">2,000+ Happy Customers</div>
-    </div>
-  </div>
-
-  <div class="reviews-grid">
-    <!-- Review 1 -->
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"The bridal combo set was absolutely stunning. Everyone at my wedding thought it was real
-        gold — couldn't be happier!"</p>
-      <div class="review-author">
-        <img src="assets/home/community_1.jpg" alt="Priya Menon" class="author-avatar">
-        <div class="author-info">
-          <h4 class="author-name">PRIYA MENON</h4>
-          <span class="author-meta">Chennai · Verified Buyer</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Review 2 -->
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"Ordered the long haaram for Onam celebrations. The quality is exceptional and arrived
-        beautifully packaged."</p>
-      <div class="review-author">
-        <img src="assets/home/community_2.jpg" alt="Anjali Nair" class="author-avatar">
-        <div class="author-info">
-          <h4 class="author-name">ANJALI NAIR</h4>
-          <span class="author-meta">Kochi · Verified Buyer</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Review 3 -->
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"Glowmyst is my go-to for every occasion. The designs are so authentic and the price point
-        is unbeatable."</p>
-      <div class="review-author">
-        <img src="assets/home/community_3.jpg" alt="Deepa Krishnan" class="author-avatar">
-        <div class="author-info">
-          <h4 class="author-name">DEEPA KRISHNAN</h4>
-          <span class="author-meta">Bangalore · Verified Buyer</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="reviews-dots">
-    <span class="active"></span><span></span><span></span>
-  </div>
-</section>
-
-<!-- COMMUNITY SECTION -->
-<section class="community-section">
-  <div class="community-header">
-    <!-- <div class="community-dots">
-      <span></span><span></span><span></span>
-    </div> -->
-    <div class="community-tag">AS SEEN ON YOU</div>
-    <h2 class="community-title">Styled by Our Community</h2>
-  </div>
-
-  <div class="community-grid">
-    <div class="community-img-wrapper"><img src="assets/home/community_1.jpg" alt="Community Style"></div>
-    <div class="community-img-wrapper"><img src="assets/home/community_2.jpg" alt="Community Style"></div>
-    <div class="community-img-wrapper"><img src="assets/home/community_3.jpg" alt="Community Style"></div>
-    <div class="community-img-wrapper"><img src="assets/home/community_4.jpg" alt="Community Style"></div>
-    <div class="community-img-wrapper"><img src="assets/home/community_5.jpg" alt="Community Style"></div>
-    <div class="community-img-wrapper"><img src="assets/home/community_6.jpg" alt="Community Style"></div>
-  </div>
-
-  <div class="community-footer">
-    <a href="https://instagram.com/glowmyst" target="_blank" class="instagram-handle">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C99A45" stroke-width="2"
-        stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-      </svg>
-      glowmyst
-    </a>
-    <a href="https://instagram.com/glowmyst" target="_blank" class="insta-btn">FOLLOW US ON INSTAGRAM</a>
-  </div>
-</section>
-
-<!-- Chat Banner Section -->
-<section class="chat-banner-section">
-  <div class="chat-banner-bg">
-    <img src="assets/chat_banner_bg.png" alt="Chat Banner Background">
-    <div class="chat-banner-overlay"></div>
-  </div>
-  <div class="chat-banner-content">
-    <div class="chat-header">
-      <span class="decor-line"></span>
-      <span class="chat-pretitle">NEED HELP CHOOSING?</span>
-      <span class="decor-line"></span>
-    </div>
-    <h2 class="chat-title">
-      Chat with our<br>
-      <span class="italic-serif">Jewellery Experts</span>
-    </h2>
-    <p class="chat-desc">
-      Get expert advice on jewellery & sarees,<br>
-      bridal sets, styling, order tracking & more.
-    </p>
-
-    <a href="#" class="whatsapp-btn">
-      <svg class="wa-icon" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.66-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.292 5.292 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.98 1.005-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.886-9.888 9.886m8.412-18.307A11.859 11.859 0 0012.051 0C5.495 0 .16 5.333.158 11.893c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.333 11.893-11.893a11.82 11.82 0 00-3.48-8.411" />
-      </svg>
-      Chat on WhatsApp
-    </a>
-
-    <div class="chat-timing">
-      <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-        stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"></circle>
-        <polyline points="12 6 12 12 16 14"></polyline>
-      </svg>
-      <span>Mon - Sat &bull; 9am to 9pm IST</span>
-    </div>
-  </div>
 </section>

@@ -1,0 +1,2174 @@
+:host {
+    display: block;
+    --ease-premium: cubic-bezier(0.65, 0, 0.35, 1);
+    --duration-food: 950ms;
+    --duration-ingredients: 850ms;
+    --duration-content: 700ms;
+    --duration-bg: 1100ms;
+    --delay-ingredients: 40ms;
+    --delay-content: 120ms;
+}
+
+// ---------------------------------------------------------------------------
+// Scroll scaffolding
+// ---------------------------------------------------------------------------
+
+.hero-scroll-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.hero-pinned {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.hero-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    perspective: 1200px;
+    background: #111;
+}
+
+.hero-stage--reduced {
+    perspective: none;
+}
+
+// ---------------------------------------------------------------------------
+// Background crossfade layers
+// ---------------------------------------------------------------------------
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity var(--duration-bg) ease;
+    z-index: 0;
+}
+
+.hero-bg--visible {
+    opacity: 1;
+}
+
+.hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+        linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.15) 42%, rgba(0, 0, 0, 0) 65%),
+        linear-gradient(to right, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 45%);
+    pointer-events: none;
+}
+
+.hero-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(circle at 68% 38%,
+            rgba(255, 255, 255, 0.22) 0%,
+            rgba(255, 255, 255, 0) 55%);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+}
+
+// ---------------------------------------------------------------------------
+// Slides
+// ---------------------------------------------------------------------------
+
+.slide {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    transform-style: preserve-3d;
+}
+
+.slide--hidden {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.slide--exiting,
+.slide--entering-start,
+.slide--entering-run,
+.slide--active {
+    visibility: visible;
+}
+
+.slide-inner {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding: 6vh 6vw 24vh;
+    transform-style: preserve-3d;
+    pointer-events: none;
+}
+
+// --- Visual stage (food + ingredients) --------------------------------------
+
+.visual-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.visual {
+    position: absolute;
+    will-change: transform, opacity;
+    transform-style: preserve-3d;
+    transform-origin: 50% 50%;
+}
+
+.food-visual {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+
+    /* Large enough to match the reference */
+    width: 90vw;
+    height: 92vh;
+
+    transform: translate3d(-50%, -50%, 0) scale(1);
+    transform-origin: center center;
+
+    transition:
+        transform 900ms var(--ease-premium),
+        opacity 750ms var(--ease-premium);
+
+    filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.32));
+
+    z-index: 3;
+}
+
+.food-visual .food-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.ingredients-visual {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: 100vw;
+    height: 100vh;
+
+    transform: translate3d(-50%, -50%, 0) scale(1);
+    transform-origin: center center;
+
+    transition:
+        transform 850ms var(--ease-premium),
+        opacity 750ms var(--ease-premium);
+
+    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.28));
+
+    z-index: 4;
+}
+
+.ingredients-visual .ingredients-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+// --- Text content -------------------------------------------------------
+
+.content {
+    position: absolute;
+    bottom: 32vh;
+    left: 6vw;
+    z-index: 10;
+    max-width: 560px;
+    padding: 28px 32px;
+    border-radius: 24px;
+    background: rgba(15, 15, 15, 0.28);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+    color: #fff;
+    transform: translate3d(0, 0, 0);
+    pointer-events: auto;
+    transition:
+        transform var(--duration-content) var(--ease-premium) var(--delay-content),
+        opacity var(--duration-content) var(--ease-premium) var(--delay-content);
+}
+
+.eyebrow {
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 12px;
+}
+
+.title {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-size: clamp(2.6rem, 6vw, 4.6rem);
+    line-height: 1.02;
+    font-weight: 700;
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+    text-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.desc {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.86);
+    margin: 0 0 26px;
+    max-width: 40ch;
+}
+
+.cta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.cta {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 14px 30px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.cta--primary {
+    background: #fff;
+    color: #1a1a1a;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.cta--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+}
+
+.cta--ghost {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.cta--ghost:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+}
+
+
+
+
+// ---------------------------------------------------------------------------
+// Idle floating (only while a slide is fully settled)
+// ---------------------------------------------------------------------------
+
+@keyframes floatFood {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: translateY(-14px) rotate(1.4deg) scale(1.015);
+    }
+}
+
+@keyframes floatIngredients {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(10px) rotate(-2.2deg);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Category label
+// ---------------------------------------------------------------------------
+
+.category-label {
+    position: absolute;
+    top: 32px;
+    left: 6vw;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+
+    span {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Indicators
+// ---------------------------------------------------------------------------
+
+.slide-indicators {
+    position: absolute;
+    right: 5vw;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.indicator-index {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: color 0.3s ease;
+}
+
+.indicator-bar {
+    width: 26px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.indicator-bar-fill {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: #fff;
+    transition: width 0.4s ease;
+}
+
+.indicator--active {
+    color: #fff;
+}
+
+.indicator--active .indicator-bar-fill {
+    width: 100%;
+}
+
+// ---------------------------------------------------------------------------
+// Vertical progress rail
+// ---------------------------------------------------------------------------
+
+.progress-rail {
+    position: absolute;
+    right: calc(5vw - 34px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 140px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    z-index: 4;
+    display: none; // subtle secondary indicator, shown on larger screens only
+}
+
+.progress-fill {
+    width: 100%;
+    background: #fff;
+    border-radius: 2px;
+    transition: height 0.6s var(--ease-premium);
+}
+
+// ---------------------------------------------------------------------------
+// Scroll hint
+// ---------------------------------------------------------------------------
+
+.scroll-hint {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.75);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    animation: hintFade 0.5s ease;
+}
+
+.scroll-hint-track {
+    width: 2px;
+    height: 34px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.scroll-hint-dot {
+    position: absolute;
+    top: 0;
+    left: -1px;
+    width: 4px;
+    height: 10px;
+    border-radius: 2px;
+    background: #fff;
+    animation: hintTravel 1.8s ease-in-out infinite;
+}
+
+@keyframes hintTravel {
+    0% {
+        top: 0;
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        top: 24px;
+        opacity: 0;
+    }
+}
+
+@keyframes hintFade {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Screen-reader only
+// ---------------------------------------------------------------------------
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Responsive
+// ---------------------------------------------------------------------------
+
+@media (min-width: 900px) {
+    .progress-rail {
+        display: block;
+    }
+}
+
+@media (max-width: 1024px) {
+    .hero-stage {
+        perspective: 900px;
+    }
+
+    .content {
+        max-width: 480px;
+        padding: 22px 24px;
+    }
+}
+
+@media (max-width: 720px) {
+    .hero-stage {
+        perspective: 600px;
+    }
+
+    .slide-inner {
+        padding: 14vh 6vw 24vh;
+    }
+
+    .content {
+        position: absolute;
+        bottom: 12vh;
+        left: 5vw;
+        right: 5vw;
+        max-width: none;
+        padding: 20px 20px 24px;
+        border-radius: 20px;
+    }
+
+    .title {
+        font-size: clamp(2.1rem, 9vw, 2.8rem);
+    }
+
+    .desc {
+        font-size: 0.95rem;
+        margin-bottom: 18px;
+    }
+
+    .cta {
+        padding: 12px 22px;
+        font-size: 0.85rem;
+    }
+
+    .slide-indicators {
+        right: 4vw;
+        gap: 12px;
+    }
+
+    .indicator-bar {
+        width: 16px;
+    }
+
+    .category-label {
+        top: 20px;
+        left: 5vw;
+        font-size: 0.65rem;
+    }
+
+    .scroll-hint {
+        bottom: 18px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Reduced motion
+// ---------------------------------------------------------------------------
+
+@media (prefers-reduced-motion: reduce) {
+    :host {
+        --duration-food: 260ms;
+        --duration-ingredients: 260ms;
+        --duration-content: 220ms;
+        --duration-bg: 260ms;
+        --delay-ingredients: 0ms;
+        --delay-content: 0ms;
+    }
+
+    .food-img,
+    .ingredients-img {
+        animation: none !important;
+    }
+
+    .slide--exiting .food-visual,
+    .slide--entering-start .food-visual {
+        transform: translate3d(-50%, -50%, 0) !important;
+    }
+
+    .slide--exiting .ingredients-visual,
+    .slide--entering-start .ingredients-visual {
+        transform: translate3d(-50%, -50%, 0) !important;
+    }
+
+    .slide--exiting .content,
+    .slide--entering-start .content {
+        transform: translate3d(0, 10px, 0) !important;
+    }
+}
+
+
+
+// ---------------------------------------------------------------------------
+// Premium slide animation
+// ---------------------------------------------------------------------------
+
+@keyframes foodEnterDown {
+    0% {
+        transform: translate3d(-50%, calc(-50% + 78vh), -40px) scale(0.92);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate3d(-50%, -50%, 0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes foodExitDown {
+    0% {
+        transform: translate3d(-50%, -50%, 0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate3d(-50%, calc(-50% + 78vh), -40px) scale(0.92);
+        opacity: 0;
+    }
+}
+
+@keyframes ingredientsEnterDown {
+    0% {
+        transform: translate3d(-50%, calc(-50% + 78vh), -40px) scale(0.92); // was -78vh (top) → now bottom
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate3d(-50%, -50%, 0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes ingredientsEnterUp {
+    0% {
+        transform: translate3d(-50%, calc(-50% - 78vh), -40px) scale(0.92); // was +78vh (bottom) → now top
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate3d(-50%, -50%, 0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes ingredientsExitDown {
+    0% {
+        transform: translate3d(-50%, -50%, 0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate3d(-50%, calc(-50% - 78vh), -40px) scale(0.92);
+        opacity: 0;
+    }
+}
+
+.slide--exiting {
+    z-index: 3;
+}
+
+.slide--entering-start,
+.slide--entering-run {
+    z-index: 2;
+}
+
+.slide--exiting,
+.slide--entering-start,
+.slide--entering-run,
+.slide--active {
+    visibility: visible;
+    opacity: 1;
+}
+
+// ---------------------------------------------------------------------------
+// UP direction
+// ---------------------------------------------------------------------------
+
+@keyframes foodEnterUp {
+    0% {
+        transform: translate3d(-50%, calc(-50% - 78vh), -40px) scale(0.92);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate3d(-50%, -50%, 0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes foodExitUp {
+    0% {
+        transform: translate3d(-50%, -50%, 0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate3d(-50%, calc(-50% - 78vh), -40px) scale(0.92);
+        opacity: 0;
+    }
+}
+
+@keyframes ingredientsEnterUp {
+    0% {
+        transform: translate3d(-50%, calc(-50% + 78vh), -40px) scale(0.92);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate3d(-50%, -50%, 0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes ingredientsExitUp {
+    0% {
+        transform: translate3d(-50%, -50%, 0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate3d(-50%, calc(-50% + 78vh), -40px) scale(0.92);
+        opacity: 0;
+    }
+}
+
+
+// ---------------------------------------------------------------------------
+// DOWN — entering
+// ---------------------------------------------------------------------------
+
+.slide--entering-start.slide--dir-down .food-visual {
+    animation: foodEnterDown 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.slide--entering-start.slide--dir-down .ingredients-visual {
+    animation: ingredientsEnterDown 1000ms cubic-bezier(0.22, 1, 0.36, 1) 70ms both;
+}
+
+
+// ---------------------------------------------------------------------------
+// DOWN — exiting
+// ---------------------------------------------------------------------------
+
+.slide--exiting.slide--dir-down .food-visual {
+    animation: foodExitDown 950ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+.slide--exiting.slide--dir-down .ingredients-visual {
+    animation: ingredientsExitDown 1000ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+
+// ---------------------------------------------------------------------------
+// UP — entering
+// ---------------------------------------------------------------------------
+
+.slide--entering-start.slide--dir-up .food-visual {
+    animation: foodEnterUp 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.slide--entering-start.slide--dir-up .ingredients-visual {
+    animation: ingredientsEnterUp 1000ms cubic-bezier(0.22, 1, 0.36, 1) 70ms both;
+}
+
+
+// ---------------------------------------------------------------------------
+// UP — exiting
+// ---------------------------------------------------------------------------
+
+.slide--exiting.slide--dir-up .food-visual {
+    animation: foodExitUp 950ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+.slide--exiting.slide--dir-up .ingredients-visual {
+    animation: ingredientsExitUp 1000ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+
+// ---------------------------------------------------------------------------
+// Content animation
+// ---------------------------------------------------------------------------
+
+@keyframes contentEnterDown {
+    from {
+        transform: translate3d(0, 45px, -20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes contentExitDown {
+    from {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translate3d(0, 45px, -20px);
+        opacity: 0;
+    }
+}
+
+@keyframes contentEnterUp {
+    from {
+        transform: translate3d(0, -45px, -20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes contentExitUp {
+    from {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translate3d(0, -45px, -20px);
+        opacity: 0;
+    }
+}
+
+.slide--entering-start.slide--dir-down .content {
+    animation: contentEnterDown 700ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+}
+
+.slide--exiting.slide--dir-down .content {
+    animation: contentExitDown 700ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+.slide--entering-start.slide--dir-up .content {
+    animation: contentEnterUp 700ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+}
+
+.slide--exiting.slide--dir-up .content {
+    animation: contentExitUp 700ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+
+// ---------------------------------------------------------------------------
+// Stable state
+// ---------------------------------------------------------------------------
+
+.slide--active .food-visual {
+    transform: translate3d(-50%, -50%, 0) scale(1);
+    opacity: 1;
+    animation: none;
+}
+
+.slide--active .ingredients-visual {
+    transform: translate3d(-50%, -50%, 0) scale(1);
+    opacity: 1;
+    animation: none;
+}
+
+.slide--active .content {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    animation: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:host {
+    display: block;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    min-height: 100vh;
+    width: 100%;
+}
+
+// ---------------------------------------------------------------------------
+// Left — dark content panel (60%)
+// ---------------------------------------------------------------------------
+
+.features-panel--dark {
+    background: #2a1608;
+    display: flex;
+    align-items: center;
+    padding: 8vh 6vw;
+}
+
+.features-panel-inner {
+    max-width: 620px;
+}
+
+.eyebrow {
+    display: block;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #f5a52c;
+    margin-bottom: 20px;
+}
+
+.heading {
+    font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: clamp(2.6rem, 4.6vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    color: #f5a52c;
+    margin: 0 0 28px;
+
+    span {
+        display: block;
+    }
+}
+
+.divider {
+    height: 0;
+    border-top: 3px dashed rgba(245, 165, 44, 0.55);
+    margin-bottom: 28px;
+}
+
+.description {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 52ch;
+    margin: 0 0 48px;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px 32px;
+}
+
+.feature-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.feature-icon {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1.5px solid #f5a52c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f5a52c;
+
+    svg {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+.feature-title {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #f5a52c;
+    margin: 0 0 8px;
+}
+
+.feature-description {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0;
+    max-width: 32ch;
+}
+
+// ---------------------------------------------------------------------------
+// Right — full-bleed image panel (40%)
+// ---------------------------------------------------------------------------
+
+.features-panel--image {
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+}
+
+.features-panel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+// ---------------------------------------------------------------------------
+// Responsive
+// ---------------------------------------------------------------------------
+
+@media (max-width: 1024px) {
+    .feature-grid {
+        gap: 28px 24px;
+    }
+}
+
+@media (max-width: 860px) {
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .features-panel--dark {
+        padding: 10vh 6vw 6vh;
+    }
+
+    .features-panel--image {
+        min-height: 50vh;
+    }
+}
+
+@media (max-width: 560px) {
+    .heading {
+        font-size: clamp(2.1rem, 9vw, 2.8rem);
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+//signature
+/* ========================================================= SIGNATURE HORIZONTAL SCROLL ========================================================= */
+.signature-horizontal {
+    position: relative;
+    background: #f4f0e9;
+    color: #181512;
+}
+
+/* ========================================================= HEADER ========================================================= */
+.signature-header {
+    min-height: 85vh;
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    align-items: center;
+    padding: 100px 7vw;
+    gap: 7vw;
+    overflow: hidden;
+}
+
+.signature-intro {
+    max-width: 620px;
+}
+
+.kicker {
+    display: block;
+    margin-bottom: 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.55;
+}
+
+.tagline {
+    display: block;
+    margin-bottom: 22px;
+    font-size: clamp(14px, 1vw, 17px);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.65;
+}
+
+.signature-heading {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(54px, 7vw, 110px);
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+    font-weight: 700;
+}
+
+.signature-heading span:last-child {
+    margin-left: 1.2em;
+}
+
+.signature-description {
+    max-width: 460px;
+    margin-top: 36px;
+    font-size: 17px;
+    line-height: 1.7;
+    opacity: 0.65;
+}
+
+/* ========================================================= HEADER IMAGE ========================================================= */
+.signature-header-image {
+    position: relative;
+    width: min(100%, 700px);
+    height: 580px;
+    margin-left: auto;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.signature-header-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scale(1.03);
+    transition: transform 1.2s cubic-bezier(.16, 1, .3, 1);
+}
+
+.signature-header:hover .signature-header-image img {
+    transform: scale(1.08);
+}
+
+/* ========================================================= HORIZONTAL SCROLL AREA ========================================================= */
+.signature-scroll {
+    position: sticky;
+
+    top: 0;
+
+    height: 100vh;
+
+    overflow: hidden;
+
+    background: #181512;
+}
+
+/* This is the element that moves horizontally. */
+.signature-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: clamp(24px, 3vw, 55px);
+    padding: 0 8vw;
+    width: max-content;
+}
+
+/* ========================================================= WATERMARK ========================================================= */
+.signature-watermark {
+    position: absolute;
+    left: 7vw;
+    top: 8%;
+    font-size: clamp(100px, 18vw, 300px);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.08em;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.035);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ========================================================= DISH CARD ========================================================= */
+.dish-card {
+    position: relative;
+    flex: 0 0 clamp(340px, 34vw, 520px);
+    background: #f8f5ef;
+    color: #181512;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.22);
+    transform: translateY(0) rotate(0deg);
+    transition: transform 700ms cubic-bezier(.16, 1, .3, 1), box-shadow 700ms ease;
+}
+
+/* Slight rotation gives the cards a more editorial feeling. */
+.dish-card:nth-child(2n) {
+    transform: translateY(25px) rotate(1deg);
+}
+
+.dish-card:nth-child(3n) {
+    transform: translateY(-20px) rotate(-1deg);
+}
+
+.dish-card:hover {
+    transform: translateY(-15px) rotate(0deg);
+    box-shadow: 0 35px 90px rgba(0, 0, 0, 0.32);
+}
+
+/* ========================================================= IMAGE ========================================================= */
+.dish-image {
+    position: relative;
+    height: clamp(320px, 38vh, 440px);
+    overflow: hidden;
+}
+
+.dish-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 900ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.dish-card:hover .dish-image img {
+    transform: scale(1.08);
+}
+
+.dish-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.18), transparent 45%);
+    pointer-events: none;
+}
+
+/* ========================================================= BADGE ========================================================= */
+.dish-badge {
+    position: absolute;
+    z-index: 2;
+    top: 20px;
+    left: 20px;
+    padding: 8px 13px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 999px;
+}
+
+/* ========================================================= BODY ========================================================= */
+.dish-body {
+    padding: 26px 28px 30px;
+}
+
+.dish-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.dish-name {
+    margin: 0;
+    max-width: 300px;
+    font-size: clamp(21px, 1.5vw, 27px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+}
+
+.dish-price {
+    flex-shrink: 0;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.dish-description {
+    max-width: 390px;
+    margin: 17px 0 25px;
+    font-size: 14px;
+    line-height: 1.65;
+    opacity: 0.58;
+}
+
+/* ========================================================= CTA ========================================================= */
+.dish-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.dish-cta span {
+    display: inline-block;
+    font-size: 20px;
+    transition: transform 400ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.dish-cta:hover span {
+    transform: translateX(8px);
+}
+
+/* ========================================================= SCROLL INDICATOR ========================================================= */
+.signature-scroll-indicator {
+    position: absolute;
+    z-index: 10;
+    left: 8vw;
+    bottom: 45px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.indicator-line {
+    position: relative;
+    width: 150px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.indicator-progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30%;
+    height: 100%;
+    background: white;
+    transform-origin: left;
+}
+
+.indicator-text {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+/* ========================================================= MOBILE IMPORTANT: Mobile does NOT use vertical-to-horizontal conversion. It becomes a native horizontal swipe carousel. ========================================================= */
+@media (max-width: 900px) {
+    .signature-header {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding: 80px 6vw 60px;
+        gap: 45px;
+    }
+
+    .signature-intro {
+        max-width: 100%;
+    }
+
+    .signature-header-image {
+        width: 100%;
+        height: 420px;
+        margin-left: 0;
+    }
+
+    /* ----------------------------------------- MOBILE DISH AREA ----------------------------------------- */
+    .signature-scroll {
+        /* * IMPORTANT: * Do not use sticky on mobile. */
+        position: relative;
+        top: auto;
+        height: auto !important;
+        min-height: 0;
+        padding: 70px 0 90px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        /* * Native mobile scrolling. */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        background: #181512;
+    }
+
+    .signature-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* ----------------------------------------- TRACK ----------------------------------------- */
+    .signature-track {
+        position: relative;
+        top: auto;
+        left: auto;
+        height: auto;
+        width: max-content;
+        display: flex;
+        align-items: stretch;
+        gap: 20px;
+        padding: 0 6vw;
+        /* * JS transform is disabled below. */
+        transform: none !important;
+    }
+
+    /* ----------------------------------------- WATERMARK ----------------------------------------- */
+    .signature-watermark {
+        position: absolute;
+        left: 6vw;
+        top: -30px;
+        font-size: 100px;
+        white-space: nowrap;
+    }
+
+    /* ----------------------------------------- CARDS ----------------------------------------- */
+    .dish-card {
+        flex: 0 0 82vw;
+        width: 82vw;
+        max-width: 420px;
+        /* * Remove desktop rotations. */
+        transform: none !important;
+        border-radius: 5px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+    }
+
+    .dish-card:nth-child(2n),
+    .dish-card:nth-child(3n) {
+        transform: none !important;
+    }
+
+    .dish-card:hover {
+        transform: none !important;
+    }
+
+    .dish-image {
+        height: 330px;
+    }
+
+    .dish-body {
+        padding: 24px 24px 28px;
+    }
+
+    .dish-name {
+        font-size: 22px;
+    }
+
+    /* ----------------------------------------- SCROLL INDICATOR ----------------------------------------- */
+    .signature-scroll-indicator {
+        position: relative;
+        left: auto;
+        bottom: auto;
+        margin: 35px 6vw 0;
+        display: flex;
+    }
+}
+
+/* ========================================================= SMALL PHONES ========================================================= */
+@media (max-width: 600px) {
+    .signature-header {
+        padding: 65px 6vw 45px;
+    }
+
+    .signature-heading {
+        font-size: clamp(48px, 16vw, 80px);
+    }
+
+    .signature-heading span:last-child {
+        margin-left: 0.5em;
+    }
+
+    .signature-header-image {
+        height: 330px;
+    }
+
+    .signature-scroll {
+        padding-top: 60px;
+    }
+
+    .signature-track {
+        gap: 16px;
+        padding-left: 6vw;
+        padding-right: 6vw;
+    }
+
+    .dish-card {
+        flex-basis: 84vw;
+        width: 84vw;
+    }
+
+    .dish-image {
+        height: 300px;
+    }
+
+    .dish-body {
+        padding: 22px 20px 25px;
+    }
+
+    .signature-scroll-indicator {
+        display: none;
+    }
+}
+
+/* ========================================================= REDUCED MOTION ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+
+    .dish-card,
+    .dish-image img,
+    .signature-header-image img,
+    .dish-cta span {
+        transition: none;
+    }
+}
+
+
+
+
+
+/* ========================================================= MENU SHOWCASE ========================================================= */
+.menu-showcase {
+    position: relative;
+    padding: 150px 7vw 100px;
+    background: #f3eee5;
+    color: #171411;
+    overflow: hidden;
+}
+
+/* HEADER */
+.menu-showcase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 50px;
+    margin-bottom: 65px;
+}
+
+.menu-showcase-intro {
+    max-width: 750px;
+}
+
+.menu-kicker {
+    display: block;
+    margin-bottom: 25px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    opacity: .45;
+}
+
+.menu-title {
+    margin: 0;
+    font-size: clamp(65px, 8vw, 125px);
+    line-height: .82;
+    letter-spacing: -.07em;
+    font-weight: 700;
+}
+
+.menu-title span {
+    display: block;
+    margin-left: 1.1em;
+    font-style: italic;
+    font-weight: 400;
+}
+
+.menu-description {
+    max-width: 440px;
+    margin: 35px 0 0 1px;
+    font-size: 15px;
+    line-height: 1.75;
+    opacity: .55;
+}
+
+.menu-total {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.menu-total strong {
+    font-size: 75px;
+    line-height: .8;
+    letter-spacing: -.07em;
+}
+
+.menu-total span {
+    margin-top: 12px;
+    font-size: 9px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    opacity: .45;
+}
+
+/* CATEGORIES */
+.menu-categories {
+    display: flex;
+    gap: 9px;
+    margin-bottom: 40px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.menu-categories::-webkit-scrollbar {
+    display: none;
+}
+
+.menu-categories button {
+    flex: 0 0 auto;
+    padding: 12px 20px;
+    border: 1px solid rgba(23, 20, 17, .18);
+    border-radius: 100px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .35s ease;
+}
+
+.menu-categories button:hover {
+    transform: translateY(-2px);
+}
+
+.menu-categories button.active {
+    background: #171411;
+    color: #f3eee5;
+    border-color: #171411;
+}
+
+/* HORIZONTAL AREA */
+.menu-horizontal {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    cursor: grab;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+.menu-horizontal::-webkit-scrollbar {
+    display: none;
+}
+
+.menu-horizontal:active {
+    cursor: grabbing;
+}
+
+.menu-track {
+    display: flex;
+    width: max-content;
+    gap: 25px;
+    padding: 10px 0 35px;
+}
+
+/* CARD */
+.menu-card {
+    position: relative;
+    flex: 0 0 min(430px, 34vw);
+    width: min(430px, 34vw);
+    background: #fff;
+    overflow: hidden;
+    transform: translateY(calc(var(--card-index) * 7px));
+    transition: transform .8s cubic-bezier(.16, 1, .3, 1), box-shadow .5s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-14px) rotate(-1deg);
+    box-shadow: 0 35px 80px rgba(0, 0, 0, .16);
+}
+
+/* IMAGE */
+.menu-card-image {
+    position: relative;
+    height: 450px;
+    overflow: hidden;
+}
+
+.menu-card-image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 1s cubic-bezier(.16, 1, .3, 1);
+}
+
+.menu-card:hover .menu-card-image img {
+    transform: scale(1.08);
+}
+
+.menu-card-badge {
+    position: absolute;
+    z-index: 3;
+    top: 18px;
+    left: 18px;
+    padding: 8px 12px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(12px);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.menu-card-number {
+    position: absolute;
+    right: 20px;
+    bottom: 18px;
+    font-size: 55px;
+    font-weight: 700;
+    line-height: .8;
+    letter-spacing: -.06em;
+    color: #fff;
+    opacity: .7;
+    mix-blend-mode: overlay;
+}
+
+/* CARD BODY */
+.menu-card-content {
+    padding: 25px 25px 28px;
+}
+
+.menu-card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.menu-card-heading h3 {
+    max-width: 280px;
+    margin: 0;
+    font-size: 24px;
+    line-height: .95;
+    letter-spacing: -.04em;
+}
+
+.menu-price {
+    font-size: 16px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.menu-card-content p {
+    max-width: 350px;
+    min-height: 48px;
+    margin: 18px 0 25px;
+    font-size: 12px;
+    line-height: 1.65;
+    opacity: .5;
+}
+
+/* ORDER */
+.menu-order-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 13px 0;
+    border: 0;
+    border-top: 1px solid rgba(23, 20, 17, .15);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.menu-arrow {
+    font-size: 20px;
+    transition: transform .35s ease;
+}
+
+.menu-order-button:hover .menu-arrow {
+    transform: translate(5px, -5px);
+}
+
+/* SCROLL NOTE */
+.menu-scroll-note {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    margin-top: 20px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    opacity: .4;
+}
+
+.menu-scroll-line {
+    width: 70px;
+    height: 1px;
+    background: currentColor;
+}
+
+/* ========================================================= FOOD STORY ========================================================= */
+.food-story {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #181512;
+    color: #f5f0e7;
+}
+
+/* LEFT */
+.food-story-visual {
+    position: relative;
+}
+
+.food-story-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.story-watermark {
+    position: absolute;
+    top: 12%;
+    left: 5%;
+    font-size: clamp(90px, 13vw, 210px);
+    font-weight: 800;
+    letter-spacing: -.09em;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, .035);
+    pointer-events: none;
+}
+
+.story-visual-slide {
+    position: absolute;
+    inset: 12%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(.88) translateY(30px);
+    transition: opacity .8s cubic-bezier(.16, 1, .3, 1), transform 1s cubic-bezier(.16, 1, .3, 1);
+}
+
+.story-visual-slide.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+.story-visual-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.story-big-number {
+    position: absolute;
+    left: 7%;
+    bottom: 8%;
+    font-size: clamp(90px, 10vw, 150px);
+    font-weight: 700;
+    line-height: .75;
+    letter-spacing: -.08em;
+    opacity: .12;
+}
+
+/* RIGHT */
+.food-story-content {
+    padding: 0 8vw 15vh 5vw;
+}
+
+.story-opening {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.story-kicker {
+    margin-bottom: 25px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    opacity: .4;
+}
+
+.story-opening h2 {
+    max-width: 700px;
+    margin: 0;
+    font-size: clamp(55px, 7vw, 105px);
+    line-height: .88;
+    letter-spacing: -.065em;
+}
+
+.story-opening h2 em {
+    font-weight: 400;
+}
+
+.story-opening p {
+    max-width: 430px;
+    margin-top: 35px;
+    font-size: 14px;
+    line-height: 1.8;
+    opacity: .45;
+}
+
+/* STORY STEPS */
+.story-step {
+    min-height: 72vh;
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    align-items: center;
+    gap: 25px;
+    opacity: .22;
+    transform: translateY(35px);
+    transition: opacity .6s ease, transform .7s cubic-bezier(.16, 1, .3, 1);
+}
+
+.story-step.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.story-step-number {
+    align-self: start;
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    opacity: .45;
+}
+
+.story-step-label {
+    display: block;
+    margin-bottom: 20px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+    opacity: .4;
+}
+
+.story-step h3 {
+    margin: 0;
+    font-size: clamp(40px, 5vw, 75px);
+    line-height: .9;
+    letter-spacing: -.055em;
+}
+
+.story-step p {
+    max-width: 430px;
+    margin-top: 28px;
+    font-size: 15px;
+    line-height: 1.8;
+    opacity: .5;
+}
+
+/* FINALE */
+.story-finale {
+    min-height: 75vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: clamp(50px, 7vw, 100px);
+    line-height: .85;
+    letter-spacing: -.065em;
+}
+
+.story-finale span {
+    opacity: .3;
+}
+
+.story-finale strong {
+    font-weight: 700;
+}
+
+/* ========================================================= TABLET ========================================================= */
+@media (max-width: 1000px) {
+    .menu-card {
+        flex-basis: 420px;
+        width: 420px;
+    }
+}
+
+/* ========================================================= MOBILE ========================================================= */
+@media (max-width: 900px) {
+
+    /* MENU */
+    .menu-showcase {
+        padding: 90px 6vw 80px;
+    }
+
+    .menu-showcase-header {
+        display: block;
+        margin-bottom: 45px;
+    }
+
+    .menu-title {
+        font-size: clamp(55px, 16vw, 85px);
+    }
+
+    .menu-title span {
+        margin-left: .55em;
+    }
+
+    .menu-description {
+        margin-top: 25px;
+    }
+
+    .menu-total {
+        align-items: flex-start;
+        margin-top: 35px;
+    }
+
+    .menu-total strong {
+        font-size: 55px;
+    }
+
+    .menu-categories {
+        margin-bottom: 25px;
+    }
+
+    .menu-track {
+        gap: 16px;
+        padding-right: 6vw;
+    }
+
+    .menu-card {
+        flex: 0 0 84vw;
+        width: 84vw;
+        transform: none !important;
+    }
+
+    .menu-card:hover {
+        transform: none;
+    }
+
+    .menu-card-image {
+        height: 330px;
+    }
+
+    .menu-scroll-note {
+        justify-content: flex-start;
+        margin-top: 15px;
+    }
+
+    /* STORY */
+    .food-story {
+        display: block;
+    }
+
+    /* * On mobile we don't keep the desktop sticky * image. This prevents the common "black screen / * stuck scroll" problem. */
+    .food-story-visual {
+        height: 420px;
+    }
+
+    .food-story-sticky {
+        position: relative;
+        height: 420px;
+        top: auto;
+    }
+
+    .story-watermark {
+        top: 15%;
+        left: 0;
+        font-size: 80px;
+    }
+
+    .story-visual-slide {
+        inset: 35px;
+    }
+
+    .story-big-number {
+        bottom: 30px;
+        left: 25px;
+        font-size: 80px;
+    }
+
+    .food-story-content {
+        padding: 0 6vw 80px;
+    }
+
+    .story-opening {
+        min-height: 75vh;
+    }
+
+    .story-opening h2 {
+        font-size: clamp(48px, 14vw, 75px);
+    }
+
+    .story-step {
+        min-height: 70vh;
+        grid-template-columns: 45px 1fr;
+        gap: 15px;
+        opacity: 1;
+        transform: none;
+    }
+
+    .story-step h3 {
+        font-size: clamp(38px, 11vw, 58px);
+    }
+
+    .story-finale {
+        min-height: 50vh;
+        font-size: clamp(48px, 14vw, 75px);
+    }
+}
+
+/* ========================================================= SMALL PHONE ========================================================= */
+@media (max-width: 600px) {
+    .menu-card-image {
+        height: 300px;
+    }
+
+    .menu-card-content {
+        padding: 22px 20px 25px;
+    }
+
+    .menu-card-heading h3 {
+        font-size: 21px;
+    }
+
+    .food-story-visual,
+    .food-story-sticky {
+        height: 350px;
+    }
+
+    .story-visual-slide {
+        inset: 25px;
+    }
+
+    .story-opening {
+        min-height: 65vh;
+    }
+
+    .story-step {
+        min-height: 65vh;
+    }
+}

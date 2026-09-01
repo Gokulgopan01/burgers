@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Glowmyst": {
+    "burgers": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/glowmyst",
+            "outputPath": "dist/burgers",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -38,27 +38,16 @@
           },
           "configurations": {
             "production": {
-              "optimization": {
-                "scripts": true,
-                "styles": true,
-                "fonts": false
-              },
               "budgets": [
                 {
                   "type": "initial",
                   "maximumWarning": "2MB",
-                  "maximumError": "4MB"
+                  "maximumError": "5MB"
                 },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "20kB",
-                  "maximumError": "60kb"
-                },
-                {
-                  "type": "bundle",
-                  "name": "styles",
-                  "maximumWarning": "200kB",
-                  "maximumError": "400kB"
+                  "maximumError": "50kB"
                 }
               ],
               "outputHashing": "all"
@@ -75,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Glowmyst:build:production"
+              "buildTarget": "burgers:build:production"
             },
             "development": {
-              "buildTarget": "Glowmyst:build:development"
+              "buildTarget": "burgers:build:development"
             }
           },
           "defaultConfiguration": "development"
