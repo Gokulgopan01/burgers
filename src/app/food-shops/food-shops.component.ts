@@ -9,6 +9,7 @@ import {
   Renderer2
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ScrollRevealDirective } from './scroll-reveal.directive';
 
 export interface FoodSlide {
   id: number;
@@ -41,7 +42,7 @@ type Phase = 'idle' | 'start' | 'run';
 
 @Component({
   selector: 'app-food-shops',
-  imports: [CommonModule],
+  imports: [CommonModule, ScrollRevealDirective],
   templateUrl: './food-shops.component.html',
   styleUrl: './food-shops.component.scss'
 })
@@ -173,11 +174,13 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private signatureProgress = 0;
   private signatureRaf: number | null = null;
+  private currentTranslate = 0;
+  private targetTranslate = 0;
   private isMobileSignature(): boolean {
     return window.innerWidth <= 900;
   }
 
-  readonly kicker = '01 / Signature Menu';
+  readonly kicker = 'Signature Menu';
   readonly tagline = 'The Ones Worth Craving';
   readonly sig_heading = ['Made To Be', 'Remembered'];
   readonly sig_description =
@@ -253,6 +256,8 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
     window.addEventListener('touchstart', this.onTouchStart, { passive: true });
     window.addEventListener('touchmove', this.onTouchMove, { passive: false });
     window.addEventListener('touchend', this.onTouchEnd, { passive: true });
+    this.bindAnimationEnd();
+    this.signatureRaf = requestAnimationFrame(this.tickSignature);
 
     requestAnimationFrame(() => {
       this.updateSignatureHeight();
@@ -277,6 +282,7 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
     window.removeEventListener('touchstart', this.onTouchStart);
     window.removeEventListener('touchmove', this.onTouchMove);
     window.removeEventListener('touchend', this.onTouchEnd);
+    if (this.signatureRaf) cancelAnimationFrame(this.signatureRaf);
     window.removeEventListener(
       'scroll',
       this.storyScrollHandler
@@ -418,31 +424,23 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
      * Angular state every frame.
      */
 
-    if (!this.signatureRaf) {
-
-      this.signatureRaf =
-        requestAnimationFrame(() => {
-
-          track.style.transform =
-            `translate3d(${-translateX}px, 0, 0)`;
 
 
-          if (this.signatureProgressRef) {
+    this.targetTranslate = translateX;
 
-            this.signatureProgressRef
-              .nativeElement
-              .style.transform =
-              `scaleX(${progress})`;
-
-          }
-
-
-          this.signatureRaf = null;
-
-        });
-
+    if (this.signatureProgressRef) {
+      this.signatureProgressRef.nativeElement.style.transform = `scaleX(${progress})`;
     }
 
+
+  }
+  private tickSignature = (): void => {
+    const track = this.signatureTrackRef?.nativeElement;
+    if (track) {
+      this.currentTranslate += (this.targetTranslate - this.currentTranslate) * 0.09;
+      track.style.transform = `translate3d(${-this.currentTranslate}px, 0, 0)`;
+    }
+    this.signatureRaf = requestAnimationFrame(this.tickSignature);
   }
 
   @HostListener('window:scroll')
@@ -559,9 +557,7 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
      * The entering/exiting classes themselves trigger the CSS
      * keyframe animations.
      */
-    this.transitionTimer = setTimeout(() => {
-      this.finishTransition();
-    }, duration);
+
   }
   private finishTransition(): void {
     this.isTransitioning = false;
@@ -573,6 +569,16 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.lockTimer = setTimeout(() => {
       this.locked = false;
     }, this.LOCK_BUFFER);
+  }
+
+  private bindAnimationEnd(): void {
+    const stage = this.heroWrapperRef.nativeElement.querySelector('.hero-stage');
+    stage?.addEventListener('animationend', (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('food-visual') && this.isTransitioning) {
+        this.finishTransition();
+      }
+    });
   }
 
   /** True while the pinned hero fills the viewport (i.e. scroll should be captured) */
