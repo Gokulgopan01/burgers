@@ -101,6 +101,24 @@
     visibility: visible;
 }
 
+.hero-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    font-size: clamp(6rem, 18vw, 24rem);
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.04);
+    z-index: 1;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    pointer-events: none;
+    user-select: none;
+    font-family: 'Inter', system-ui, sans-serif;
+    transition: opacity 1000ms var(--ease-premium), transform 1000ms var(--ease-premium);
+}
+
 .slide-inner {
     position: relative;
     z-index: 10;
@@ -798,6 +816,76 @@
 
 .slide--exiting.slide--dir-up .food-visual {
     animation: foodExitUp 950ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+// ---------------------------------------------------------------------------
+// Watermark animations (left to right)
+// ---------------------------------------------------------------------------
+
+@keyframes watermarkEnterLeft {
+    0% {
+        transform: translate3d(calc(-50% - 50vw), -50%, 0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate3d(-50%, -50%, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes watermarkExitRight {
+    0% {
+        transform: translate3d(-50%, -50%, 0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate3d(calc(-50% + 50vw), -50%, 0);
+        opacity: 0;
+    }
+}
+
+@keyframes watermarkEnterRight {
+    0% {
+        transform: translate3d(calc(-50% + 50vw), -50%, 0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate3d(-50%, -50%, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes watermarkExitLeft {
+    0% {
+        transform: translate3d(-50%, -50%, 0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate3d(calc(-50% - 50vw), -50%, 0);
+        opacity: 0;
+    }
+}
+
+// DOWN (Next slide) - New comes from left, old goes to right (as requested)
+.slide--entering-start.slide--dir-down .hero-watermark {
+    animation: watermarkEnterLeft 1000ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.slide--exiting.slide--dir-down .hero-watermark {
+    animation: watermarkExitRight 1000ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+// UP (Prev slide) - Reverse direction for natural feel: new comes from right, old goes to left
+.slide--entering-start.slide--dir-up .hero-watermark {
+    animation: watermarkEnterRight 1000ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.slide--exiting.slide--dir-up .hero-watermark {
+    animation: watermarkExitLeft 1000ms cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 
 .slide--exiting.slide--dir-up .ingredients-visual {

@@ -20,6 +20,7 @@ export interface FoodSlide {
   background: string;
   image: string;
   ingredientsImage: string;
+  watermark: string;
 }
 
 export interface WrapFeature {
@@ -73,6 +74,7 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
       background: 'linear-gradient(135deg, #5B1028 0%, #7F1D3A 50%, #3B0718 100%)',
       image: 'assets/landing/Shawarma.png',
       ingredientsImage: 'assets/landing/Shawarma_ingrediants.png',
+      watermark: 'WRAPPED'
     },
     {
       id: 2,
@@ -82,6 +84,7 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
       background: 'linear-gradient(135deg, #063B32 0%, #087F5B 50%, #022C26 100%)',
       image: 'assets/landing/Burger.png',
       ingredientsImage: 'assets/landing/Burger_ingrediants.png',
+      watermark: 'STACKED'
     },
     {
       id: 3,
@@ -91,6 +94,7 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
       background: 'linear-gradient(135deg, #7A4632 0%, #4A2418 50%, #21100B 100%)',
       image: 'assets/landing/Chocolate_shake.png',
       ingredientsImage: 'assets/landing/Chocolate_shake_ingrediants.png',
+      watermark: 'CHILLED'
     },
     {
       id: 4,
@@ -100,6 +104,7 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
       background: 'linear-gradient(135deg, #24103F 0%, #54247A 50%, #160A29 100%)',
       image: 'assets/landing/Pizza.png',
       ingredientsImage: 'assets/landing/Pizza_ingrediants.png',
+      watermark: 'BAKED'
     },
   ];
 
@@ -210,9 +215,9 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
     },
     {
       badge: 'Pasta',
-      name: 'Creamy Chicken Pasta',
+      name: 'Healthy Veg Burger',
       price: '₹239',
-      description: 'Penne tossed in a rich, slow-simmered chicken cream sauce.',
+      description: 'Penne tossed in a rich, slow-simmered vegetables sauce.',
       image: 'assets/sig_menu/pasta.png',
       ctaLabel: 'Add To Cart',
     },
@@ -226,11 +231,20 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
     },
   ];
 
-  menuCategories = ['All', 'Wraps', 'Burgers', 'Pizza', 'Pasta', 'Momos'];
+  menuCategories = ['All', 'Wraps', 'Burgers', 'Pizza', 'Pasta', 'Momos', 'Combos', 'Shawaya'];
   activeMenuCategory = 'All';
-  menuItems = [{ category: 'Wraps', name: 'Signature Chicken Shawarma', description: 'Char-grilled chicken, crisp vegetables and our house sauce wrapped warm.', price: '₹179', image: 'assets/sig_menu/Shawarma.png', badge: 'Signature' }, { category: 'Burgers', name: 'Loaded Chicken Burger', description: 'Crispy chicken, melted cheddar and our signature sauce.', price: '₹249', image: 'assets/sig_menu/burgers.png', badge: 'Popular' }, { category: 'Pizza', name: 'Classic Chicken Pizza', description: 'Stone-baked crust, mozzarella, chicken and fresh herbs.', price: '₹299', image: 'assets/landing/Pizza.png', badge: 'Favourite' }, { category: 'Pasta', name: 'Creamy Chicken Pasta', description: 'Penne tossed in a rich, creamy chicken sauce.', price: '₹239', image: 'assets/sig_menu/pasta.png' }, { category: 'Momos', name: 'Steamed Chicken Momos', description: 'Juicy hand-folded dumplings served with spicy house chutney.', price: '₹169', image: 'assets/sig_menu/momos.jpg', badge: 'Fresh' }, { category: 'Wraps', name: 'Spicy Paneer Wrap', description: 'Grilled paneer, crunchy vegetables and spicy creamy sauce.', price: '₹159', image: 'assets/sig_menu/Shawarma.jpg' }];
-
-
+  menuItems = [
+    { category: 'Wraps', name: 'Signature Chicken Shawarma', description: 'Char-grilled chicken, crisp vegetables and our house sauce wrapped warm.', price: '₹179', image: 'assets/sig_menu/menu/Shawarma.png', badge: 'Signature' },
+    { category: 'Burgers', name: 'Beef Stack Burger', description: 'Crispy Beef, melted  cheddar and our signature sauce.', price: '₹249', image: 'assets/sig_menu/menu/burgers.png', badge: 'Popular' },
+    { category: 'Burgers', name: 'Crispy Chicken Burger', description: 'Crispy Chicken, melted  cheddar and our signature sauce.', price: '₹249', image: 'assets/sig_menu/menu/burgers.jpg', badge: 'Popular' },
+    { category: 'Pizza', name: 'Classic Chicken Pizza', description: 'Stone-baked crust, mozzarella, chicken and fresh herbs.', price: '₹299', image: 'assets/landing/Pizza.png', badge: 'Favourite' },
+    { category: 'Pasta', name: 'Creamy Chicken Pasta', description: 'Penne tossed in a rich, creamy chicken sauce.', price: '₹239', image: 'assets/sig_menu/menu/pasta.jpg' },
+    { category: 'Momos', name: 'Steamed Chicken Momos', description: 'Juicy hand-folded dumplings served with spicy house chutney.', price: '₹169', image: 'assets/sig_menu/momos.jpg', badge: 'Fresh' },
+    { category: 'Wraps', name: 'Spicy Paneer Wrap', description: 'Grilled paneer, crunchy vegetables and spicy creamy sauce.', price: '₹159', image: 'assets/sig_menu/menu/panner.png' },
+    { category: 'Combos', name: 'Signature Burger Combo', description: 'Crispy chicken or beef burger served with golden fries and a refreshing soft drink.', price: '₹329', image: 'assets/sig_menu/menu/burger_combo.png', badge: 'Best Value' },
+    { category: 'Combos', name: 'Signature Shawarma Combo', description: 'Char-grilled chicken shawarma served with crispy fries and a refreshing soft drink.', price: '₹259', image: 'assets/sig_menu/menu/Shawaya_Combo.png', badge: 'Popular' },
+    { category: 'Shawaya', name: 'Chicken Shawaya', description: 'Juicy charcoal-grilled chicken marinated with aromatic spices and served with fresh sides.', price: '₹349', image: 'assets/sig_menu/menu/shawai.png', badge: 'Signature' },
+  ]
 
   ngOnInit(): void {
     if (typeof window !== 'undefined' && 'matchMedia' in window) {

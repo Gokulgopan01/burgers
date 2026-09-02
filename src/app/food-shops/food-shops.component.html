@@ -23,6 +23,8 @@
         [attr.aria-label]="(i + 1) + ' of ' + slides.length + ': ' + slide.name"
         [attr.aria-hidden]="i === currentIndex ? null : 'true'">
 
+        <div class="hero-watermark" aria-hidden="true">{{ slide.watermark }}</div>
+
         <div class="visual ingredients-visual">
           <img class="ingredients-img" [src]="slide.ingredientsImage" [alt]="slide.name + ' ingredients, floating'"
             loading="lazy" />
