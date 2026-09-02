@@ -589,7 +589,14 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
     const stage = this.heroWrapperRef.nativeElement.querySelector('.hero-stage');
     stage?.addEventListener('animationend', (e: Event) => {
       const target = e.target as HTMLElement;
-      if (target.classList.contains('food-visual') && this.isTransitioning) {
+      const slide = target.closest('.slide');
+      // Only finish the transition when the entering slide's animation ends
+      if (
+        slide &&
+        slide.classList.contains('slide--entering-start') &&
+        target.classList.contains('food-visual') &&
+        this.isTransitioning
+      ) {
         this.finishTransition();
       }
     });
