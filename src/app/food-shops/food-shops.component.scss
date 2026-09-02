@@ -108,7 +108,7 @@
     transform: translate3d(-50%, -50%, 0);
     font-size: clamp(6rem, 18vw, 24rem);
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.09);
     z-index: 1;
     white-space: nowrap;
     text-transform: uppercase;
@@ -116,7 +116,8 @@
     pointer-events: none;
     user-select: none;
     font-family: 'Inter', system-ui, sans-serif;
-    transition: opacity 1000ms var(--ease-premium), transform 1000ms var(--ease-premium);
+    transition: opacity 1000ms var(--ease-premium),
+        transform 1000ms var(--ease-premium);
 }
 
 .slide-inner {
@@ -776,11 +777,11 @@
 // ---------------------------------------------------------------------------
 
 .slide--entering-start.slide--dir-down .food-visual {
-    animation: foodEnterDown 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: foodEnterDown 1400ms cubic-bezier(0.22, 1, 0.36, 1) 600ms both;
 }
 
 .slide--entering-start.slide--dir-down .ingredients-visual {
-    animation: ingredientsEnterDown 1000ms cubic-bezier(0.22, 1, 0.36, 1) 70ms both;
+    animation: ingredientsEnterDown 1500ms cubic-bezier(0.22, 1, 0.36, 1) 650ms both;
 }
 
 
@@ -789,11 +790,11 @@
 // ---------------------------------------------------------------------------
 
 .slide--exiting.slide--dir-down .food-visual {
-    animation: foodExitDown 950ms cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation: foodExitDown 1200ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 .slide--exiting.slide--dir-down .ingredients-visual {
-    animation: ingredientsExitDown 1000ms cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation: ingredientsExitDown 1200ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 
@@ -802,11 +803,11 @@
 // ---------------------------------------------------------------------------
 
 .slide--entering-start.slide--dir-up .food-visual {
-    animation: foodEnterUp 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: foodEnterUp 1400ms cubic-bezier(0.22, 1, 0.36, 1) 600ms both;
 }
 
 .slide--entering-start.slide--dir-up .ingredients-visual {
-    animation: ingredientsEnterUp 1000ms cubic-bezier(0.22, 1, 0.36, 1) 70ms both;
+    animation: ingredientsEnterUp 1500ms cubic-bezier(0.22, 1, 0.36, 1) 650ms both;
 }
 
 
@@ -815,7 +816,7 @@
 // ---------------------------------------------------------------------------
 
 .slide--exiting.slide--dir-up .food-visual {
-    animation: foodExitUp 950ms cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation: foodExitUp 1200ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 // ---------------------------------------------------------------------------
@@ -872,24 +873,24 @@
 
 // DOWN (Next slide) - New comes from left, old goes to right (as requested)
 .slide--entering-start.slide--dir-down .hero-watermark {
-    animation: watermarkEnterLeft 1000ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: watermarkEnterLeft 1400ms cubic-bezier(0.22, 1, 0.36, 1) 600ms both;
 }
 
 .slide--exiting.slide--dir-down .hero-watermark {
-    animation: watermarkExitRight 1000ms cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation: watermarkExitRight 1200ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 // UP (Prev slide) - Reverse direction for natural feel: new comes from right, old goes to left
 .slide--entering-start.slide--dir-up .hero-watermark {
-    animation: watermarkEnterRight 1000ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: watermarkEnterRight 1400ms cubic-bezier(0.22, 1, 0.36, 1) 600ms both;
 }
 
 .slide--exiting.slide--dir-up .hero-watermark {
-    animation: watermarkExitLeft 1000ms cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation: watermarkExitLeft 1200ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 .slide--exiting.slide--dir-up .ingredients-visual {
-    animation: ingredientsExitUp 1000ms cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation: ingredientsExitUp 1200ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 

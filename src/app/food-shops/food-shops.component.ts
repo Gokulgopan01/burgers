@@ -104,7 +104,7 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
       background: 'linear-gradient(135deg, #24103F 0%, #54247A 50%, #160A29 100%)',
       image: 'assets/landing/Pizza.png',
       ingredientsImage: 'assets/landing/Pizza_ingrediants.png',
-      watermark: 'BAKED'
+      watermark: 'BAKEDUP'
     },
   ];
 
@@ -151,9 +151,9 @@ export class FoodShopsComponent implements OnInit, AfterViewInit, OnDestroy {
   phase: Phase = 'idle';
   reducedMotion = false;
 
-  private readonly BASE_DURATION = 1080;  // ms
+  private readonly BASE_DURATION = 2100;  // ms
   private readonly REDUCED_DURATION = 320; // ms
-  private readonly LOCK_BUFFER = 120; // ms cooldown after a transition
+  private readonly LOCK_BUFFER = 150; // ms cooldown after a transition
   private readonly WHEEL_THRESHOLD = 8; // px, ignores micro trackpad noise
   private readonly TOUCH_THRESHOLD = 45; // px swipe distance to trigger a slide
 
